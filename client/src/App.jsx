@@ -6,10 +6,12 @@ import MovieDeatils from './pages/MovieDeatils'
 import Watchlist from './pages/watchlist'
 import Diary from './pages/Diary'
 import Search from './pages/Search'
+import Navbar from './components/Navbar'
 
 const App = () => {
   return (
       <div>
+        <Navbar/>
         <Routes>
           <Route path = "/" element={<Home/>}/>
           <Route path = "/profile" element={<Profile/>}/>
