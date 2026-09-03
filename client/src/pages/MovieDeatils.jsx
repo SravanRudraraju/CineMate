@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import background from "../assets/backgroundimage.jpg"
 import poster from "../assets/sampleposter.jpg"
 import { Link, useNavigate } from 'react-router-dom'
+import {
+  FaRegClock, FaClock, FaRegEye, FaEye, FaRegHeart, FaHeart, FaRegStar, FaStar, FaRegEdit
+} from "react-icons/fa";
+import { MdPlaylistAdd } from "react-icons/md";
 const MovieDeatils = () => {
   const movie = {
     title: "The Odyssey",
@@ -16,14 +20,18 @@ const MovieDeatils = () => {
     whereToWatch: ["Netflix", "Prime Video"]
 
   };
+  const [watched, setWatched] = useState(false)
+  const [liked, setLiked] = useState(false)
+  const [watchlisted, setWatchlisted] = useState(false)
+
   return (
     <div className='relative min-h-screen'>
       <div className='fixed inset-0 bg-cover bg-center -z-10' style={{ backgroundImage: `url(${background})` }} />
-      <div className='fixed inset-0 -z-10 bg-black-50'/>
-      <div className='fixed inset-0 -z-10 bg-gradient-to-r from-black/40 via-black/60 to-black/80'/>
+      <div className='fixed inset-0 -z-10 bg-black-50' />
+      <div className='fixed inset-0 -z-10 bg-gradient-to-r from-black/40 via-black/60 to-black/80' />
 
-      <main className="px-12 py-16 text-white">
-        <div className="max-w-6xl mx-auto mt-12 flex items-center gap-14">
+      <main className="px-12 py-8 text-white">
+        <div className="max-w-6xl mx-auto mt-4 flex items-center gap-14">
 
           {/* Poster */}
           <img
@@ -109,6 +117,53 @@ const MovieDeatils = () => {
             </div>
 
           </div>
+        </div>
+
+        {/* action bar */}
+        <div className='w-[70%] m-auto mt-10 flex justify-between rounded-2xl border border-white/10 bg-black/30 backdrop-blur-md px-8 py-5'>
+
+          <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
+            onClick={()=>{
+              !watched ? setWatched(true) : setWatched(false)
+            }}>
+              <span className='text-4xl transition-transform duration-200 group-hover:scale-110'>  {watched ? <FaEye className='text-green-700'/> : <FaRegEye />} </span>
+              <span className='text-base'>{watched ? "WATCHED" : "WATCH"}</span>
+          </button>
+
+          <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
+            onClick={()=>{
+              !liked ? setLiked(true) : setLiked(false)
+            }}>
+             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> {liked ? <FaHeart className='text-pink-800'/> : <FaRegHeart />}</span> 
+             <span className='text-base'>{liked ? "LIKED":"LIKE"}</span>
+             
+          </button>
+
+          <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white">
+             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegStar/></span> 
+             <span className='text-base'>RATE</span>
+          </button>
+          
+
+          <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white">
+             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegEdit/></span> 
+             <span className='text-base'>REVIEW</span>
+             
+          </button> 
+
+          <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
+            onClick={()=>{
+              !watchlisted ? setWatchlisted(true) : setWatchlisted(false)
+            }}>
+              <span className='text-4xl transition-transform duration-200 group-hover:scale-110'>{watchlisted ? <FaClock className='text-orange-400/80'/> : <FaRegClock />}</span>
+              <span className='text-base'>{watchlisted ? "IN WATCHLIST":"WATCHLIST"}</span> 
+          </button>
+
+          <div className="group flex flex-col items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white">
+            <button className='w-28 flex flex-col items-center text-3xl transition-transform duration-200 group-hover:scale-110'><MdPlaylistAdd /></button>
+            <p className = "text-md">ADD TO LISTS...</p>
+          </div>
+
         </div>
       </main>
 
