@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 const Navbar = () => {
   return (
-    <nav className='w-[85%] mx-auto sticky top-0 flex items-center justify-between bg-sky-200'>
+    <nav className='w-[85%] mx-auto  top-0 flex items-center justify-between'>
       <div><Link to="/"><img className='w-50 h-20 ' src={logo} alt="cinemate" /></Link></div> 
       <div className='  flex gap-6 items center justify-between '>
         <Link to="/watchlist">WATCHLIST</Link>
