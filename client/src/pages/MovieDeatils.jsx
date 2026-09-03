@@ -6,6 +6,7 @@ import {
   FaRegClock, FaClock, FaRegEye, FaEye, FaRegHeart, FaHeart, FaRegStar, FaStar, FaRegEdit
 } from "react-icons/fa";
 import { MdPlaylistAdd } from "react-icons/md";
+
 const MovieDeatils = () => {
   const movie = {
     title: "The Odyssey",
@@ -20,6 +21,43 @@ const MovieDeatils = () => {
     whereToWatch: ["Netflix", "Prime Video"]
 
   };
+
+const cast = [
+  {
+    name: "Matt Damon",
+    character: "Odysseus",
+    image: "https://media.vanityfair.com/photos/6a622940ff162b3b7ff5cc82/1:1/w_718,h_718,c_limit/odissea%20damon.jpg"
+  },
+  {
+    name: "Tom Holland",
+    character: "Telemachus",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_TkwP6P6emLF2n2VOdHpwPrdZrDsUc5vGv7HckzdYdBrHJRaOL2xScPeAYmaoh0w0CITu9DwU4XBieTgtK2CeZeDLg2ugcydXDtTRgw&s=10"
+  },
+  {
+    name: "Anne Hathaway",
+    character: "Penelope",
+    image: "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTEfnBrdk0sTzM6wkYFCd-R_7BJTrco8kblhzbj5o5z2tfqSm1lhsPn0LaFbzpYDkI7BU_kr831MynbG4A"
+  },
+  {
+    name: "Zendaya",
+    character: "Athena",
+    image: "https://resizing.flixster.com/7h7AedhDdxGnl0VR-Dris64byKo=/fit-in/352x330/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/591658_v9_bc.jpg"
+  }
+]
+
+const crew = [
+  {
+    name : "christopher nolan",
+    role : "Director",
+    image : "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcT8pazo7AdxjVPblOpYmWmdCN9XvJbM77L1oonLYIFZoO4muJweEicJOuBVpAo1LBWwh9oF34_ZRovQi6c"
+  },
+  {
+    name : "Emma thomas",
+    role : "producer",
+    image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuVdAL5u_Kk1B_q9B_PtBcTHUZR-XjfhQn1Cn3EQDJWvvltKykKoCwVnCF&s=10"
+  }
+]
+
   const [watched, setWatched] = useState(false)
   const [liked, setLiked] = useState(false)
   const [watchlisted, setWatchlisted] = useState(false)
@@ -123,48 +161,101 @@ const MovieDeatils = () => {
         <div className='w-[70%] m-auto mt-10 flex justify-between rounded-2xl border border-white/10 bg-black/30 backdrop-blur-md px-8 py-5'>
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
-            onClick={()=>{
+            onClick={() => {
               !watched ? setWatched(true) : setWatched(false)
             }}>
-              <span className='text-4xl transition-transform duration-200 group-hover:scale-110'>  {watched ? <FaEye className='text-green-700'/> : <FaRegEye />} </span>
-              <span className='text-base'>{watched ? "WATCHED" : "WATCH"}</span>
+            <span className='text-4xl transition-transform duration-200 group-hover:scale-110'>  {watched ? <FaEye className='text-green-700' /> : <FaRegEye />} </span>
+            <span className='text-base'>{watched ? "WATCHED" : "WATCH"}</span>
           </button>
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
-            onClick={()=>{
+            onClick={() => {
               !liked ? setLiked(true) : setLiked(false)
             }}>
-             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> {liked ? <FaHeart className='text-pink-800'/> : <FaRegHeart />}</span> 
-             <span className='text-base'>{liked ? "LIKED":"LIKE"}</span>
-             
+            <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> {liked ? <FaHeart className='text-pink-800' /> : <FaRegHeart />}</span>
+            <span className='text-base'>{liked ? "LIKED" : "LIKE"}</span>
+
           </button>
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white">
-             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegStar/></span> 
-             <span className='text-base'>RATE</span>
+            <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegStar /></span>
+            <span className='text-base'>RATE</span>
           </button>
-          
+
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white">
-             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegEdit/></span> 
-             <span className='text-base'>REVIEW</span>
-             
-          </button> 
+            <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegEdit /></span>
+            <span className='text-base'>REVIEW</span>
+
+          </button>
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
-            onClick={()=>{
+            onClick={() => {
               !watchlisted ? setWatchlisted(true) : setWatchlisted(false)
             }}>
-              <span className='text-4xl transition-transform duration-200 group-hover:scale-110'>{watchlisted ? <FaClock className='text-orange-400/80'/> : <FaRegClock />}</span>
-              <span className='text-base'>{watchlisted ? "IN WATCHLIST":"WATCHLIST"}</span> 
+            <span className='text-4xl transition-transform duration-200 group-hover:scale-110'>{watchlisted ? <FaClock className='text-orange-400/80' /> : <FaRegClock />}</span>
+            <span className='text-base'>{watchlisted ? "IN WATCHLIST" : "WATCHLIST"}</span>
           </button>
 
           <div className="group flex flex-col items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white">
             <button className='w-28 flex flex-col items-center text-3xl transition-transform duration-200 group-hover:scale-110'><MdPlaylistAdd /></button>
-            <p className = "text-md">ADD TO LISTS...</p>
+            <p className="text-md">ADD TO LISTS...</p>
           </div>
-
         </div>
+
+        {/* cast */}
+        <section className="max-w-6xl mx-auto mt-16">
+          <h2 className="text-2xl font-semibold mb-6">
+            Cast
+          </h2>
+          <div className="flex gap-8">
+            {cast.map((person)=>(
+              <div key={person.name} className="w-36 text-center">
+              <img
+                className="w-32 h-32 object-cover mx-auto rounded-full border border-white/20 shadow-lg" 
+                src={person.image}
+                alt={person.name}
+              />
+
+              <h3 className="mt-4 text-lg font-medium">
+                {person.name}
+              </h3>
+
+              <p className="mt-1 text-sm text-white/50">
+                {person.character}
+              </p>
+            </div>
+            ))}
+            
+          </div>
+        </section>
+
+        {/* Crew */}
+        <section className="max-w-6xl mx-auto mt-16">
+          <h2 className="text-2xl font-semibold mb-6">
+            Crew
+          </h2>
+          <div className="flex gap-8">
+            {crew.map((person)=>(
+              <div key={person.name} className="w-36 text-center">
+              <img
+                className="w-32 h-32 object-cover mx-auto rounded-full border border-white/20 shadow-lg" 
+                src={person.image}
+                alt={person.name}
+              />
+
+              <h3 className="mt-4 text-lg font-medium">
+                {person.name}
+              </h3>
+
+              <p className="mt-1 text-sm text-white/50">
+                {person.role}
+              </p>
+            </div>
+            ))}
+            
+          </div>
+        </section>
       </main>
 
 
