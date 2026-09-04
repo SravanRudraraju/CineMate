@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import background from "../assets/backgroundimage.jpg"
 import poster from "../assets/sampleposter.jpg"
 import { Link, useNavigate } from 'react-router-dom'
@@ -11,17 +11,66 @@ import { MdPlaylistAdd } from "react-icons/md";
 const MovieDeatils = () => {
 
   const [Movie, setMovie] = useState(null);
+  const [watched, setWatched] = useState(false)
+  const [liked, setLiked] = useState(false)
+  const [watchlisted, setWatchlisted] = useState(false)
 
-  useEffect(()=>{
-     
-    const fetchMovie  = async ()=>{
-      const response = await fetch("http://localhost:3000/api/movies/1577336")
+  useEffect(() => {
+
+    const fetchMovie = async () => {
+      const response = await fetch("http://localhost:3000/api/movies/157336")
       const data = await response.json()
       setMovie(data)
-      
+
     }
     fetchMovie()
-  },[])
+  }, [])
+
+  if (!Movie) {
+    return <h1 className="text-white">Loading...</h1>;
+  }
+
+  const trailer = Movie.videos.results.find(
+  (video) =>
+    video.type === "Trailer" &&
+    video.site === "YouTube" &&
+    video.official === true
+  );
+  const trailerKey = trailer?.key;
+const importantJobs = [
+  "Director",
+  "Writer",
+  "Screenplay",
+  "Producer",
+  "Executive Producer",
+  "Director of Photography",
+  "Editor",
+  "Original Music Composer",
+  "Production Design",
+  "Costume Design"
+];
+const importantCrew = Movie.credits.crew
+  .filter((person) => importantJobs.includes(person.job))
+  .reduce((people, person) => {
+    const existingPerson = people.find(
+      (p) => p.id === person.id
+    );
+
+    if (existingPerson) {
+      existingPerson.jobs.push(person.job);
+    } else {
+      people.push({
+        id: person.id,
+        name: person.name,
+        profile_path: person.profile_path,
+        jobs: [person.job]
+      });
+    }
+
+    return people;
+  }, [])
+  .slice(0, 40);
+   
   const movie = {
     title: "The Odyssey",
     year: 2026,
@@ -36,83 +85,82 @@ const MovieDeatils = () => {
 
   };
 
-const cast = [
-  {
-    name: "Matt Damon",
-    character: "Odysseus",
-    image: "https://media.vanityfair.com/photos/6a622940ff162b3b7ff5cc82/1:1/w_718,h_718,c_limit/odissea%20damon.jpg"
-  },
-  {
-    name: "Tom Holland",
-    character: "Telemachus",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_TkwP6P6emLF2n2VOdHpwPrdZrDsUc5vGv7HckzdYdBrHJRaOL2xScPeAYmaoh0w0CITu9DwU4XBieTgtK2CeZeDLg2ugcydXDtTRgw&s=10"
-  },
-  {
-    name: "Anne Hathaway",
-    character: "Penelope",
-    image: "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTEfnBrdk0sTzM6wkYFCd-R_7BJTrco8kblhzbj5o5z2tfqSm1lhsPn0LaFbzpYDkI7BU_kr831MynbG4A"
-  },
-  {
-    name: "Zendaya",
-    character: "Athena",
-    image: "https://resizing.flixster.com/7h7AedhDdxGnl0VR-Dris64byKo=/fit-in/352x330/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/591658_v9_bc.jpg"
-  }
-]
+  const cast = [
+    {
+      name: "Matt Damon",
+      character: "Odysseus",
+      image: "https://media.vanityfair.com/photos/6a622940ff162b3b7ff5cc82/1:1/w_718,h_718,c_limit/odissea%20damon.jpg"
+    },
+    {
+      name: "Tom Holland",
+      character: "Telemachus",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_TkwP6P6emLF2n2VOdHpwPrdZrDsUc5vGv7HckzdYdBrHJRaOL2xScPeAYmaoh0w0CITu9DwU4XBieTgtK2CeZeDLg2ugcydXDtTRgw&s=10"
+    },
+    {
+      name: "Anne Hathaway",
+      character: "Penelope",
+      image: "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTEfnBrdk0sTzM6wkYFCd-R_7BJTrco8kblhzbj5o5z2tfqSm1lhsPn0LaFbzpYDkI7BU_kr831MynbG4A"
+    },
+    {
+      name: "Zendaya",
+      character: "Athena",
+      image: "https://resizing.flixster.com/7h7AedhDdxGnl0VR-Dris64byKo=/fit-in/352x330/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/591658_v9_bc.jpg"
+    }
+  ]
 
-const crew = [
-  {
-    name : "christopher nolan",
-    role : "Director",
-    image : "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcT8pazo7AdxjVPblOpYmWmdCN9XvJbM77L1oonLYIFZoO4muJweEicJOuBVpAo1LBWwh9oF34_ZRovQi6c"
-  },
-  {
-    name : "Emma thomas",
-    role : "producer",
-    image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuVdAL5u_Kk1B_q9B_PtBcTHUZR-XjfhQn1Cn3EQDJWvvltKykKoCwVnCF&s=10"
-  }
-]
+  const crew = [
+    {
+      name: "christopher nolan",
+      role: "Director",
+      image: "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcT8pazo7AdxjVPblOpYmWmdCN9XvJbM77L1oonLYIFZoO4muJweEicJOuBVpAo1LBWwh9oF34_ZRovQi6c"
+    },
+    {
+      name: "Emma thomas",
+      role: "producer",
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuVdAL5u_Kk1B_q9B_PtBcTHUZR-XjfhQn1Cn3EQDJWvvltKykKoCwVnCF&s=10"
+    }
+  ]
 
-  const [watched, setWatched] = useState(false)
-  const [liked, setLiked] = useState(false)
-  const [watchlisted, setWatchlisted] = useState(false)
-
+  
+    
   return (
     <div className='relative min-h-screen'>
-      <div className='fixed inset-0 bg-cover bg-center -z-10' style={{ backgroundImage: `url(${background})` }} />
+      <div className='fixed inset-0 bg-cover bg-center -z-10' style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original${Movie.backdrop_path})` }} />
       <div className='fixed inset-0 -z-10 bg-black-50' />
       <div className='fixed inset-0 -z-10 bg-gradient-to-r from-black/40 via-black/60 to-black/80' />
 
+      
       <main className="px-12 py-8 text-white">
         <div className="max-w-6xl mx-auto mt-4 flex items-center gap-14">
 
           {/* Poster */}
           <img
             className="h-[400px] w-[267px] shrink-0 object-cover rounded-lg border border-white/20 shadow-2xl"
-            src={poster}
-            alt={movie.title}
+            src={`https://image.tmdb.org/t/p/w500${Movie.poster_path}`}
+            alt={Movie.title}
           />
 
           {/* Movie Information */}
           <div className="max-w-2xl">
 
             {/* Title */}
-            <h1 className="text-5xl font-bold tracking-tight">
-              {movie.title}
+            <h1 className="text-5xl uppercase font-bold tracking-tight">
+              {Movie.title}
             </h1>
 
             {/* Metadata */}
             <p className="mt-4 text-lg text-white/70">
-              {movie.year} <span className="mx-2">•</span> {movie.runtime} mins
+              {Movie.release_date.slice(0,4)} <span className="mx-2">•</span> {Movie.runtime} mins
             </p>
 
             {/* Genres */}
             <div className="flex gap-3 mt-6">
-              {movie.genres.map((genre) => (
+              {Movie.genres.map((genre) => (
                 <span
-                  key={genre}
+                  key={genre.id}
                   className="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-sm"
                 >
-                  {genre}
+                  {genre.name}
                 </span>
               ))}
             </div>
@@ -121,22 +169,22 @@ const crew = [
             <p className="mt-7 text-lg text-white/70">
               Directed by{" "}
               <span className="text-white font-medium">
-                {movie.director}
+                {Movie.credits.crew.find((person)=>person.job === "Director")?.name}
               </span>
             </p>
 
             {/* Description */}
             <p className="mt-5 max-w-xl text-lg leading-7 text-white/80">
-              {movie.description}
+              {Movie.overview}
             </p>
 
           </div>
           {/* imdb */}
           <div className=' w-[350px] shrink-0'>
-            <a href={movie.imdbUrl} target="_blank" className='group flex items-center justify-between border-b border-white/20 pb-4'>
+            <a href={`https://www.themoviedb.org/movie/${Movie.id}`} target="_blank" className='group flex items-center justify-between border-b border-white/20 pb-4'>
               <div>
-                <p className='text-xs uppercase tracking-[0.2em] text-white/50'>IMDb</p>
-                <p className='mt-1 text-2xl font-semibold text-white group-hover:text-yellow-400 transition'>8.4/10</p>
+                <p className='text-xs uppercase tracking-[0.2em] text-white/50'>TMDB</p>
+                <p className='mt-1 text-2xl font-semibold text-white group-hover:text-yellow-400 transition'>{Movie.vote_average.toFixed(1)}/10</p>
               </div>
               <span className='text-white/40 text-xl group-hover:text-white transition'>
                 ↗
@@ -149,7 +197,7 @@ const crew = [
                 TRAILER
               </p>
               <div className="overflow-hidden rounded-xl border border-white/15 shadow-xl">
-                <iframe className='w-full aspect-video rounded-lg' src={movie.trailerUrl} title={`${movie.title}  trailer`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen />
+                <iframe className='w-full aspect-video rounded-lg' src={`https://www.youtube.com/embed/${trailerKey}`} title={`${movie.title}  trailer`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen />
               </div>
 
             </div>
@@ -223,24 +271,24 @@ const crew = [
             Cast
           </h2>
           <div className="flex gap-8">
-            {cast.map((person)=>(
-              <div key={person.name} className="w-36 text-center">
-              <img
-                className="w-32 h-32 object-cover mx-auto rounded-full border border-white/20 shadow-lg" 
-                src={person.image}
-                alt={person.name}
-              />
+            {Movie.credits.cast.map((person) => (
+              <div key={person.id} className="w-36 shrink-0 text-center">
+                <img
+                  className="w-32 h-32 object-cover mx-auto rounded-full border border-white/20 shadow-lg"
+                  src={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
+                  alt={person.name}
+                />
 
-              <h3 className="mt-4 text-lg font-medium">
-                {person.name}
-              </h3>
+                <h3 className="mt-4 text-lg font-medium">
+                  {person.name}
+                </h3>
 
-              <p className="mt-1 text-sm text-white/50">
-                {person.character}
-              </p>
-            </div>
+                <p className="mt-1 text-sm text-white/50">
+                  {person.character}
+                </p>
+              </div>
             ))}
-            
+
           </div>
         </section>
 
@@ -250,24 +298,27 @@ const crew = [
             Crew
           </h2>
           <div className="flex gap-8">
-            {crew.map((person)=>(
-              <div key={person.name} className="w-36 text-center">
-              <img
-                className="w-32 h-32 object-cover mx-auto rounded-full border border-white/20 shadow-lg" 
-                src={person.image}
-                alt={person.name}
-              />
+            {importantCrew.map((person) => (
+              <div key={person.id} className="w-36 shrink-0 text-center">
+                <img
+                  className="w-32 h-32 object-cover mx-auto rounded-full border border-white/20 shadow-lg"
+                  src={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
+                  alt={person.name}
+                />
 
-              <h3 className="mt-4 text-lg font-medium">
-                {person.name}
-              </h3>
+                <h3 className="mt-4 text-lg font-medium">
+                  {person.name}
+                </h3>
 
-              <p className="mt-1 text-sm text-white/50">
-                {person.role}
-              </p>
-            </div>
+                {person.jobs.map((job)=>(
+                  <p key={job} className="mt-1  text-sm text-white/50">
+                  {job}
+                </p>
+                ))}
+                
+              </div>
             ))}
-            
+
           </div>
         </section>
       </main>
