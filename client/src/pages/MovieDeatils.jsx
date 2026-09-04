@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import background from "../assets/backgroundimage.jpg"
 import poster from "../assets/sampleposter.jpg"
 import { Link, useNavigate } from 'react-router-dom'
@@ -7,7 +7,21 @@ import {
 } from "react-icons/fa";
 import { MdPlaylistAdd } from "react-icons/md";
 
+
 const MovieDeatils = () => {
+
+  const [Movie, setMovie] = useState(null);
+
+  useEffect(()=>{
+     
+    const fetchMovie  = async ()=>{
+      const response = await fetch("http://localhost:3000/api/movies/1577336")
+      const data = await response.json()
+      setMovie(data)
+      
+    }
+    fetchMovie()
+  },[])
   const movie = {
     title: "The Odyssey",
     year: 2026,
