@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from "react-router-dom";
 import background from "../assets/backgroundimage.jpg"
 import poster from "../assets/sampleposter.jpg"
 import { Link, useNavigate } from 'react-router-dom'
@@ -14,25 +15,27 @@ const MovieDeatils = () => {
   const [watched, setWatched] = useState(false)
   const [liked, setLiked] = useState(false)
   const [watchlisted, setWatchlisted] = useState(false)
+  const { id } = useParams();
+  
 
   useEffect(() => {
-
     const fetchMovie = async () => {
-      const response = await fetch("http://localhost:3000/api/movies/157336")
+      const response = await fetch(`http://localhost:3000/api/movies/${id}`)
       const data = await response.json()
       setMovie(data)
 
     }
     fetchMovie()
-  }, [])
+  }, [id])
 
+  
   if (!Movie) {
     return <h1 className="text-white">Loading...</h1>;
   }
 
-  const trailer = Movie.videos.results.find(
+const trailer = Movie.videos.results.find(
   (video) =>
-    video.type === "Trailer" &&
+    video.type === "Trailer"  &&
     video.site === "YouTube" &&
     video.official === true
   );
@@ -85,41 +88,7 @@ const importantCrew = Movie.credits.crew
 
   };
 
-  const cast = [
-    {
-      name: "Matt Damon",
-      character: "Odysseus",
-      image: "https://media.vanityfair.com/photos/6a622940ff162b3b7ff5cc82/1:1/w_718,h_718,c_limit/odissea%20damon.jpg"
-    },
-    {
-      name: "Tom Holland",
-      character: "Telemachus",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_TkwP6P6emLF2n2VOdHpwPrdZrDsUc5vGv7HckzdYdBrHJRaOL2xScPeAYmaoh0w0CITu9DwU4XBieTgtK2CeZeDLg2ugcydXDtTRgw&s=10"
-    },
-    {
-      name: "Anne Hathaway",
-      character: "Penelope",
-      image: "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTEfnBrdk0sTzM6wkYFCd-R_7BJTrco8kblhzbj5o5z2tfqSm1lhsPn0LaFbzpYDkI7BU_kr831MynbG4A"
-    },
-    {
-      name: "Zendaya",
-      character: "Athena",
-      image: "https://resizing.flixster.com/7h7AedhDdxGnl0VR-Dris64byKo=/fit-in/352x330/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/591658_v9_bc.jpg"
-    }
-  ]
-
-  const crew = [
-    {
-      name: "christopher nolan",
-      role: "Director",
-      image: "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcT8pazo7AdxjVPblOpYmWmdCN9XvJbM77L1oonLYIFZoO4muJweEicJOuBVpAo1LBWwh9oF34_ZRovQi6c"
-    },
-    {
-      name: "Emma thomas",
-      role: "producer",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuVdAL5u_Kk1B_q9B_PtBcTHUZR-XjfhQn1Cn3EQDJWvvltKykKoCwVnCF&s=10"
-    }
-  ]
+  
 
   
     
@@ -127,7 +96,7 @@ const importantCrew = Movie.credits.crew
     <div className='relative min-h-screen'>
       <div className='fixed inset-0 bg-cover bg-center -z-10' style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original${Movie.backdrop_path})` }} />
       <div className='fixed inset-0 -z-10 bg-black-50' />
-      <div className='fixed inset-0 -z-10 bg-gradient-to-r from-black/40 via-black/60 to-black/80' />
+      <div className='fixed inset-0 -z-10 bg-gradient-to-r from-black/60 via-black/70 to-black/80' />
 
       
       <main className="px-12 py-8 text-white">
