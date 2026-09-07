@@ -23,9 +23,21 @@ export const getTrendingMovies = async()=>{
                     accept : "application/json",
             }
         }
-    )
-    
+    ) 
     const data = await response.json()
+    return data
+}
 
+export const searchMovie = async(query) =>{
+    const response = await fetch(
+        `https://api.themoviedb.org/3/search/movie?query=${query}`,
+        {
+            headers:{
+                    Authorization : `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+                    accept : "application/json",
+            }
+        }
+    )
+    const data = await response.json()
     return data
 }

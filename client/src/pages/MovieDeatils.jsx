@@ -96,7 +96,7 @@ const importantCrew = Movie.credits.crew
     <div className='relative min-h-screen'>
       <div className='fixed inset-0 bg-cover bg-center -z-10' style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original${Movie.backdrop_path})` }} />
       <div className='fixed inset-0 -z-10 bg-black-50' />
-      <div className='fixed inset-0 -z-10 bg-gradient-to-r from-black/60 via-black/70 to-black/80' />
+      <div className='fixed inset-0 -z-10 bg-gradient-to-r from-black/50 via-black/50 to-black/50' />
 
       
       <main className="px-12 py-8 text-white">
