@@ -10,7 +10,7 @@ import Navbar from './components/Navbar'
 
 const App = () => {
   return (
-      <div>
+      <div className="relative min-h-screen bg-[#08090D]">
         <Navbar/>
         <Routes>
           <Route path = "/" element={<Home/>}/>

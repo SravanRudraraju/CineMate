@@ -114,13 +114,13 @@ const MovieDeatils = () => {
 
 
   return (
-    <div className='relative min-h-screen'>
-      <div className='fixed inset-0 bg-cover bg-center -z-10' style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original${Movie.backdrop_path})` }} />
-      <div className='fixed inset-0 -z-10 bg-black-50' />
-      <div className='fixed inset-0 -z-10 bg-gradient-to-r from-black/50 via-black/70 to-black/60' />
+    <div className='relative isolate min-h-screen'>
+      <div className='fixed inset-0 bg-cover bg-center z-0' style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original${Movie.backdrop_path})` }} />
+      <div className='fixed inset-0 z-0 bg-black-50' />
+      <div className='fixed inset-0 z-0 bg-gradient-to-r from-black/50 via-black/70 to-black/60' />
 
 
-      <main className="px-12 py-8 text-white">
+      <main className=" relative z-10 px-12 py-8 text-white">
         <div className="max-w-6xl mx-auto mt-4 flex items-center gap-18">
 
           {/* Poster */}

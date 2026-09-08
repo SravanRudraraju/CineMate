@@ -16,11 +16,11 @@ function Home() {
     }, [])
 
     return (
-        <div className="relative min-h-screen overflow-hidden bg-[#08090D]">
+        <div className="relative min-h-screen overflow-hidden ">
  
             <div className="pointer-events-none absolute -top-60 left-1/2 h-[600px] w-[1000px] -translate-x-1/2 rounded-full bg-[#FF6B1A]/[0.05] blur-[160px]" />
 
-            <main className="relative mx-auto w-[85%] max-w-[1500px] py-16">
+            <main className="relative mx-auto w-[85%] max-w-[1500px] pt-32 pb-16">
 
                 {/* TRENDING */}
                 <section className="mb-28">
