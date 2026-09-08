@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useParams } from "react-router-dom";
 import background from "../assets/backgroundimage.jpg"
 import poster from "../assets/sampleposter.jpg"
 import { Link, useNavigate } from 'react-router-dom'
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import {
   FaRegClock, FaClock, FaRegEye, FaEye, FaRegHeart, FaHeart, FaRegStar, FaStar, FaRegEdit
 } from "react-icons/fa";
@@ -16,7 +17,10 @@ const MovieDeatils = () => {
   const [liked, setLiked] = useState(false)
   const [watchlisted, setWatchlisted] = useState(false)
   const { id } = useParams();
-  
+
+  const castRef = useRef(null)
+  const crewRef = useRef(null)
+
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -28,52 +32,69 @@ const MovieDeatils = () => {
     fetchMovie()
   }, [id])
 
-  
+
   if (!Movie) {
     return <h1 className="text-white">Loading...</h1>;
   }
 
-const trailer = Movie.videos.results.find(
-  (video) =>
-    video.type === "Trailer"  &&
-    video.site === "YouTube" &&
-    video.official === true
+  const trailer = Movie.videos.results.find(
+    (video) =>
+      video.type === "Trailer" &&
+      video.site === "YouTube" &&
+      video.official === true
   );
   const trailerKey = trailer?.key;
-const importantJobs = [
-  "Director",
-  "Writer",
-  "Screenplay",
-  "Producer",
-  "Executive Producer",
-  "Director of Photography",
-  "Editor",
-  "Original Music Composer",
-  "Production Design",
-  "Costume Design"
-];
-const importantCrew = Movie.credits.crew
-  .filter((person) => importantJobs.includes(person.job))
-  .reduce((people, person) => {
-    const existingPerson = people.find(
-      (p) => p.id === person.id
-    );
+  const importantJobs = [
+    "Director",
+    "Writer",
+    "Screenplay",
+    "Producer",
+    "Executive Producer",
+    "Director of Photography",
+    "Editor",
+    "Original Music Composer",
+    "Production Design",
+    "Costume Design"
+  ];
+  const importantCrew = Movie.credits.crew
+    .filter((person) => importantJobs.includes(person.job))
+    .reduce((people, person) => {
+      const existingPerson = people.find(
+        (p) => p.id === person.id
+      );
 
-    if (existingPerson) {
-      existingPerson.jobs.push(person.job);
-    } else {
-      people.push({
-        id: person.id,
-        name: person.name,
-        profile_path: person.profile_path,
-        jobs: [person.job]
-      });
+      if (existingPerson) {
+        existingPerson.jobs.push(person.job);
+      } else {
+        people.push({
+          id: person.id,
+          name: person.name,
+          profile_path: person.profile_path,
+          jobs: [person.job]
+        });
+      }
+
+      return people;
+    }, [])
+    .slice(0, 40);
+
+  const scrollCast = (direction) => {
+    if (castRef.current) {
+      castRef.current.scrollBy({
+        left: direction === "left" ? -500 : 500,
+        behavior: "smooth"
+      })
     }
+  }
+  const scrollCrew = (direction) => {
+    if (crewRef.current) {
+      crewRef.current.scrollBy({
+        left: direction === "left" ? -500 : 500,
+        behavior: "smooth"
+      })
+    }
+  }
 
-    return people;
-  }, [])
-  .slice(0, 40);
-   
   const movie = {
     title: "The Odyssey",
     year: 2026,
@@ -88,19 +109,19 @@ const importantCrew = Movie.credits.crew
 
   };
 
-  
 
-  
-    
+
+
+
   return (
     <div className='relative min-h-screen'>
       <div className='fixed inset-0 bg-cover bg-center -z-10' style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original${Movie.backdrop_path})` }} />
       <div className='fixed inset-0 -z-10 bg-black-50' />
       <div className='fixed inset-0 -z-10 bg-gradient-to-r from-black/50 via-black/50 to-black/50' />
 
-      
+
       <main className="px-12 py-8 text-white">
-        <div className="max-w-6xl mx-auto mt-4 flex items-center gap-14">
+        <div className="max-w-6xl mx-auto mt-4 flex items-center gap-18">
 
           {/* Poster */}
           <img
@@ -119,7 +140,7 @@ const importantCrew = Movie.credits.crew
 
             {/* Metadata */}
             <p className="mt-4 text-lg text-white/70">
-              {Movie.release_date.slice(0,4)} <span className="mx-2">•</span> {Movie.runtime} mins
+              {Movie.release_date.slice(0, 4)} <span className="mx-2">•</span> {Movie.runtime} mins
             </p>
 
             {/* Genres */}
@@ -138,7 +159,7 @@ const importantCrew = Movie.credits.crew
             <p className="mt-7 text-lg text-white/70">
               Directed by{" "}
               <span className="text-white font-medium">
-                {Movie.credits.crew.find((person)=>person.job === "Director")?.name}
+                {Movie.credits.crew.find((person) => person.job === "Director")?.name}
               </span>
             </p>
 
@@ -235,60 +256,94 @@ const importantCrew = Movie.credits.crew
         </div>
 
         {/* cast */}
-        <section className="max-w-6xl mx-auto mt-16">
+        <section className="max-w-7xl mx-auto mt-16">
           <h2 className="text-2xl font-semibold mb-6">
             Cast
           </h2>
-          <div className="flex gap-8">
-            {Movie.credits.cast.map((person) => (
-              <div key={person.id} className="w-36 shrink-0 text-center">
-                <img
-                  className="w-32 h-32 object-cover mx-auto rounded-full border border-white/20 shadow-lg"
-                  src={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
-                  alt={person.name}
-                />
+          <div className='relative'>
+            <button onClick={() => scrollCast("left")}
+              className="absolute left-1 top-1/2 -translate-y-1/2 z-10
+             w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center
+             hover:bg-white/20 transition">
+              <FaChevronLeft size={14} />
+            </button>
+            <div ref={castRef} className="flex gap-8 overflow-x-auto no-scrollbar px-12">
+              {Movie.credits.cast.map((person) => (
+                <div key={person.id} className="w-36 shrink-0 text-center">
+                  <img
+                    className="w-32 h-32 object-cover mx-auto rounded-full border border-white/20 shadow-lg"
+                    src={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
+                    alt={person.name}
+                  />
 
-                <h3 className="mt-4 text-lg font-medium">
-                  {person.name}
-                </h3>
+                  <h3 className="mt-4 text-lg font-medium">
+                    {person.name}
+                  </h3>
 
-                <p className="mt-1 text-sm text-white/50">
-                  {person.character}
-                </p>
-              </div>
-            ))}
-
+                  <p className="mt-1 text-sm text-white/50">
+                    {person.character}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <button onClick={() => scrollCast("right")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10
+             w-10 h-10 rounded-full
+             bg-black/60 backdrop-blur-md
+             border border-white/20
+             text-white text-xl
+             flex items-center justify-center
+             hover:bg-black/80 transition">
+              <FaChevronRight size={14} />
+            </button>
           </div>
+
         </section>
 
         {/* Crew */}
-        <section className="max-w-6xl mx-auto mt-16">
+        <section className="max-w-7xl mx-auto mt-16">
           <h2 className="text-2xl font-semibold mb-6">
             Crew
           </h2>
-          <div className="flex gap-8">
-            {importantCrew.map((person) => (
-              <div key={person.id} className="w-36 shrink-0 text-center">
-                <img
-                  className="w-32 h-32 object-cover mx-auto rounded-full border border-white/20 shadow-lg"
-                  src={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
-                  alt={person.name}
-                />
+          <div className='relative'>
+            <button onClick={() => scrollCrew("left")}
+              className="absolute left-1 top-1/2 -translate-y-1/2 z-10
+             w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center
+             hover:bg-white/20 transition">
+              <FaChevronLeft size={14} />
+            </button>
 
-                <h3 className="mt-4 text-lg font-medium">
-                  {person.name}
-                </h3>
+            <div ref={crewRef} className="flex gap-8 overflow-x-auto no-scrollbar px-12">
+              {importantCrew.map((person) => (
+                <div key={person.id} className="w-36 shrink-0 text-center">
+                  <img
+                    className="w-32 h-32 object-cover mx-auto rounded-full border border-white/20 shadow-lg"
+                    src={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
+                    alt={person.name}
+                  />
 
-                {person.jobs.map((job)=>(
-                  <p key={job} className="mt-1  text-sm text-white/50">
-                  {job}
-                </p>
-                ))}
-                
-              </div>
-            ))}
+                  <h3 className="mt-4 text-lg font-medium">
+                    {person.name}
+                  </h3>
 
+                  {person.jobs.map((job) => (
+                    <p key={job} className="mt-1  text-sm text-white/50">
+                      {job}
+                    </p>
+                  ))}
+
+                </div>
+              ))}
+
+            </div>
+            <button onClick={() => scrollCrew("right")}
+              className="absolute right-1 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md
+             border border-white/20 text-white flex items-center justify-center
+             hover:bg-white/20 transition">
+              <FaChevronRight size={14} />
+            </button>
           </div>
+
         </section>
       </main>
 
