@@ -2,7 +2,7 @@ import express from "express"
 import "dotenv/config";
 import { getMovieById, getTrendingMovies, searchMovie } from "./services/tmdbService.js";
 import cors from "cors";
-
+import pool from "./db.js";
 
 const app = express()
 const port = 3000
