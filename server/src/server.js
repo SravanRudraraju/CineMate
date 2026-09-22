@@ -3,10 +3,16 @@ import "dotenv/config";
 import { getMovieById, getTrendingMovies, searchMovie } from "./services/tmdbService.js";
 import cors from "cors";
 import pool from "./db.js";
+import authRoutes from "./routes/authRoutes.js"
 
 const app = express()
 const port = 3000
+
+app.use(express.json())
 app.use(cors());
+
+app.use("/api/auth",authRoutes)
+
 
 app.get("/api/movies/trending", async(req,res)=>{
     try{
