@@ -7,6 +7,9 @@ import Watchlist from './pages/watchlist'
 import Diary from './pages/Diary'
 import Search from './pages/Search'
 import Navbar from './components/Navbar'
+import Login from './pages/login'
+import Register from './pages/Register'
+
 
 const App = () => {
   return (
@@ -19,6 +22,8 @@ const App = () => {
           <Route path = "/watchlist" element={<Watchlist/>}/>
           <Route path = "/diary" element={<Diary/>}/>
           <Route path = "/search" element={<Search/>}/>
+          <Route path = "/login" element={<Login/>  } />
+          <Route path='/register' element={<Register/>} />
         </Routes>
       </div>  
   )
