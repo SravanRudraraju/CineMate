@@ -12,7 +12,7 @@ const Login = () => {
           {/* Login heading */}
           <div className="mb-10">
             <h1 className="text-3xl font-semibold tracking-tight">
-              Login
+              LOGIN
             </h1>
             <div className="mt-3 h-[2px] w-10 bg-orange-500" />
           </div>
@@ -29,17 +29,8 @@ const Login = () => {
                 Username or Email
               </label>
 
-              <input
-                id="login"
-                type="text"
-                placeholder="Enter your username or email"
-                className="w-full border border-white/10 bg-white/[0.03]
-                           px-4 py-3.5 text-sm text-white
-                           outline-none transition
-                           placeholder:text-white/20
-                           focus:border-orange-500/70
-                           focus:bg-white/[0.05]"
-              />
+              <input  id="login"  type="text"  placeholder="Enter your username or email"
+                className="w-full border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-orange-500/70 focus:bg-white/[0.05]" />
             </div>
 
             {/* Password */}
@@ -60,28 +51,13 @@ const Login = () => {
                 </Link>
               </div>
 
-              <input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                className="w-full border border-white/10 bg-white/[0.03]
-                           px-4 py-3.5 text-sm text-white
-                           outline-none transition
-                           placeholder:text-white/20
-                           focus:border-orange-500/70
-                           focus:bg-white/[0.05]"
-              />
+              <input  id="password"  type="password"  placeholder="Enter your password"
+                className="w-full border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-orange-500/70 focus:bg-white/[0.05]"/>
             </div>
 
             {/* Login button */}
-            <button
-              type="submit"
-              className="mt-2 w-full bg-orange-500 py-3.5
-                         text-sm font-semibold text-black
-                         transition duration-200
-                         hover:bg-orange-400
-                         active:scale-[0.99]"
-            >
+            <button type="submit"
+              className="mt-2 w-full bg-orange-500 py-3.5 text-sm font-semibold text-black transition duration-200 hover:bg-orange-400 active:scale-[0.99]">
               LOGIN
             </button>
 
@@ -100,11 +76,8 @@ const Login = () => {
               Sign up
             </Link>
           </div>
-
         </div>
-
       </main>
-
     </div>
   );
 };
