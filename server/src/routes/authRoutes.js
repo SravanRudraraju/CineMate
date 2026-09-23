@@ -14,6 +14,19 @@ router.post("/register", async (req, res) => {
         if (!email || !username || !password) {
             return res.status(400).json({ message: "All fields are required" })
         }
+        const passwordLength = [...password].length
+        const passwordBytes = Buffer.byteLength(password,"utf-8")
+        if(passwordLength<8){
+            return res.status(400).json({
+                message: "password must be alteast 8 characters long"
+            })
+        }
+        if(passwordBytes > 72){
+            return res.status(400).json({
+                message: "password is too long"
+            })
+        }
+
         const existingEmail = await pool.query("SELECT id FROM users WHERE email = $1", [email])
 
         if (existingEmail.rows.length > 0) {

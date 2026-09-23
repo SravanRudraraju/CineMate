@@ -1,7 +1,29 @@
 import React from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Register = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: ""
+  })
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
+    })
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (formData.password !== formData.confirmPassword) {
+      console.log("Passwords do not match");
+      return;
+    }
+    console.log(formData)
+  }
   return (
     <div className="min-h-screen bg-[#08090D] text-white">
 
@@ -14,31 +36,31 @@ const Register = () => {
 
           <div className="border border-white/10 bg-[#0B0C10] px-8 py-10 sm:px-10">
 
-            
+
             <div className="mb-9">
               <h1 className="text-3xl font-semibold tracking-tight"> CREATE ACCOUNT </h1>
             </div>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="email" className="mb-2 block text-xs font-medium text-white/50">
                   Email
                 </label>
 
                 <input
-                  id="email" type="email" placeholder="you@example.com"
+                  id="email" type="email" placeholder="you@example.com" value={formData.email} onChange={handleChange}
                   className="w-full border border-white/10 bg-white/[0.025] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-orange-500 focus:bg-white/[0.04]" />
               </div>
 
               {/* Username */}
               <div>
-                <label  htmlFor="username" className="mb-2 block text-xs font-medium text-white/50">
+                <label htmlFor="username" className="mb-2 block text-xs font-medium text-white/50">
                   Username
                 </label>
 
-                <input
+                <input value={formData.username} onChange={handleChange}
                   id="username" type="text" placeholder="Choose a username"
-                   className="w-full border border-white/10 bg-white/[0.025] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-orange-500 focus:bg-white/[0.04]"/>
+                  className="w-full border border-white/10 bg-white/[0.025] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-orange-500 focus:bg-white/[0.04]" />
               </div>
 
               {/* Password */}
@@ -47,7 +69,7 @@ const Register = () => {
                   Password
                 </label>
 
-                <input  id="password"  type="password"  placeholder="Create a password"
+                <input id="password" type="password" placeholder="Create a password" value={formData.password} onChange={handleChange}
                   className="w-full border border-white/10 bg-white/[0.025] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-orange-500 focus:bg-white/[0.04]" />
               </div>
 
@@ -64,6 +86,7 @@ const Register = () => {
                   id="confirmPassword"
                   type="password"
                   placeholder="Re-enter your password"
+                  value={formData.confirmPassword} onChange={handleChange}
                   className="w-full border border-white/10 bg-white/[0.025]
                              px-4 py-3.5 text-sm text-white
                              outline-none transition
