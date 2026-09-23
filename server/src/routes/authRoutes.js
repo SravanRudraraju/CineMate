@@ -3,7 +3,7 @@ import bcrypt from "bcrypt"
 import pool from "../db.js"
 import jwt from "jsonwebtoken"
 import "dotenv/config";
-
+import authMiddleware from "../middleware/authMiddleware.js";
 const router = express.Router()
 
 
@@ -92,5 +92,7 @@ router.post("/login", async (req, res) => {
         }
     })
 })
+
+
 
 export default router;
