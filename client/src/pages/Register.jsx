@@ -16,13 +16,26 @@ const Register = () => {
       [e.target.id]: e.target.value
     })
   }
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (formData.password !== formData.confirmPassword) {
       console.log("Passwords do not match");
       return;
     }
-    console.log(formData)
+
+    const response = await fetch("http://localhost:3000/api/auth/register",{
+      method : "POST",
+      headers : {
+        "Content-type" : "application/json"
+      },
+      body : JSON.stringify({
+        email : formData.email,
+        username : formData.username,
+        password : formData.password
+      })
+    })
+    const data = await response.json()
+    console.log(data)
   }
   return (
     <div className="min-h-screen bg-[#08090D] text-white">
