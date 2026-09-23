@@ -1,8 +1,10 @@
 import React from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 
 const Register = () => {
+
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     email: "",
     username: "",
@@ -23,19 +25,24 @@ const Register = () => {
       return;
     }
 
-    const response = await fetch("http://localhost:3000/api/auth/register",{
-      method : "POST",
-      headers : {
-        "Content-type" : "application/json"
+    const response = await fetch("http://localhost:3000/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json"
       },
-      body : JSON.stringify({
-        email : formData.email,
-        username : formData.username,
-        password : formData.password
+      body: JSON.stringify({
+        email: formData.email,
+        username: formData.username,
+        password: formData.password
       })
     })
     const data = await response.json()
-    console.log(data)
+    if (response.ok) {
+      alert(data.message);
+      navigate("/login")
+    } else {
+      alert(data.message);
+    }
   }
   return (
     <div className="min-h-screen bg-[#08090D] text-white">
