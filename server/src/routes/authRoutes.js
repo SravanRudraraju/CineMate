@@ -1,7 +1,8 @@
 import express from "express";
 import bcrypt from "bcrypt"
 import pool from "../db.js"
-
+import jwt from "jsonwebtoken"
+import "dotenv/config";
 
 const router = express.Router()
 
@@ -72,11 +73,18 @@ router.post("/login", async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, data.password_hash)
     if (!passwordMatch) {
         return res.status(401).json({
-            message: "invalid password"
+            message: "invalid credentials"
         })
     }
+    const token = jwt.sign(
+        {userId : data.id},
+        process.env.JWT_SECRET,
+        {expiresIn : "1d"}
+        
+    )
     res.status(200).json({
         message: "Login successful",
+        token : token,
         user: {
             id : data.id,
             username : data.username,
