@@ -18,6 +18,9 @@ const MovieDeatils = () => {
   const [watchlisted, setWatchlisted] = useState(false)
   const { id } = useParams();
 
+  const isLoggedIn = !!localStorage.getItem("token");
+  const navigate = useNavigate()
+
   const castRef = useRef(null)
   const crewRef = useRef(null)
 
@@ -214,6 +217,10 @@ const MovieDeatils = () => {
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
             onClick={() => {
+              if(!isLoggedIn){
+                navigate("/login")
+                return
+              }
               !watched ? setWatched(true) : setWatched(false)
             }}>
             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'>  {watched ? <FaEye className='text-green-700' /> : <FaRegEye />} </span>
@@ -222,6 +229,10 @@ const MovieDeatils = () => {
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
             onClick={() => {
+              if(!isLoggedIn){
+                navigate("/login")
+                return
+              }
               !liked ? setLiked(true) : setLiked(false)
             }}>
             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> {liked ? <FaHeart className='text-pink-800' /> : <FaRegHeart />}</span>
@@ -229,13 +240,25 @@ const MovieDeatils = () => {
 
           </button>
 
-          <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white">
+          <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
+          onClick={()=>{
+            if(!isLoggedIn){
+                navigate("/login")
+                return
+              }
+          }}>
             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegStar /></span>
             <span className='text-base'>RATE</span>
           </button>
 
 
-          <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white">
+          <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
+            onClick={()=>{
+              if(!isLoggedIn){
+                navigate("/login")
+                return
+              }
+            }}>
             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegEdit /></span>
             <span className='text-base'>REVIEW</span>
 
@@ -243,13 +266,22 @@ const MovieDeatils = () => {
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
             onClick={() => {
+              if(!isLoggedIn){
+                navigate("/login")
+                return
+              }
               !watchlisted ? setWatchlisted(true) : setWatchlisted(false)
             }}>
             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'>{watchlisted ? <FaClock className='text-orange-400/80' /> : <FaRegClock />}</span>
             <span className='text-base'>{watchlisted ? "IN WATCHLIST" : "WATCHLIST"}</span>
           </button>
 
-          <div className="group flex flex-col items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white">
+          <div className="group flex flex-col items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white" onClick={()=>{
+            if(!isLoggedIn){
+                navigate("/login")
+                return
+              }
+          }}>
             <button className='w-28 flex flex-col items-center text-3xl transition-transform duration-200 group-hover:scale-110'><MdPlaylistAdd /></button>
             <p className="text-md">ADD TO LISTS...</p>
           </div>
