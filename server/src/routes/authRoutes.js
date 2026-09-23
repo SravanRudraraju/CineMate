@@ -15,13 +15,13 @@ router.post("/register", async (req, res) => {
             return res.status(400).json({ message: "All fields are required" })
         }
         const passwordLength = [...password].length
-        const passwordBytes = Buffer.byteLength(password,"utf-8")
-        if(passwordLength<8){
+        const passwordBytes = Buffer.byteLength(password, "utf-8")
+        if (passwordLength < 8) {
             return res.status(400).json({
                 message: "password must be alteast 8 characters long"
             })
         }
-        if(passwordBytes > 72){
+        if (passwordBytes > 72) {
             return res.status(400).json({
                 message: "password is too long"
             })
@@ -46,12 +46,43 @@ router.post("/register", async (req, res) => {
             message: "User registered successfully",
             user: result.rows[0]
         })
-    }catch(error){
+    } catch (error) {
         console.error(error);
         res.status(500).json({
-            message : "Something went wrong"
+            message: "Something went wrong"
         })
     }
-            
+
 })
+
+router.post("/login", async (req, res) => {
+    const { login, password } = req.body
+    if (!login || !password) {
+        return res.status(400).json({
+            message: "empty fields"
+        })
+    }
+    const result = await pool.query(`SELECT * FROM users WHERE username = $1 OR email = $1`, [login])
+    const data = result.rows[0]
+    if (!data) {
+        return res.status(401).json({
+            message: "invalid credentials"
+        })
+    }
+    const passwordMatch = await bcrypt.compare(password, data.password_hash)
+    if (!passwordMatch) {
+        return res.status(401).json({
+            message: "invalid password"
+        })
+    }
+    res.status(200).json({
+        message: "Login successful",
+        user: {
+            id : data.id,
+            username : data.username,
+            email : data.email
+        }
+    })
+})
+
 export default router;
