@@ -1,7 +1,42 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate()
+  const [loginData , setLoginData] = useState({
+    login : "",
+    password :""
+  })
+  const handleChange = (e) => {
+    setLoginData({
+      ...loginData,
+      [e.target.id]: e.target.value
+    })
+  }
+  const handleSubmit = async (e)=>{
+    e.preventDefault()
+
+    const response = await fetch("http://localhost:3000/api/auth/login",{
+      method : "POST",
+      headers : {
+        "Content-type" : "application/json"
+      },
+      body : JSON.stringify({
+        login : loginData.login,
+        password : loginData.password
+      })
+    })
+    const data = await response.json()
+    if (response.ok) {
+      alert(data.message);
+      navigate("/")
+    } else {
+      alert(data.message);
+    }
+  }
+
+
   return (
     <div className="min-h-screen bg-[#08090D] text-white">
 
@@ -18,7 +53,7 @@ const Login = () => {
           </div>
 
           {/* Form */}
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
 
             {/* Username / Email */}
             <div>
@@ -29,7 +64,7 @@ const Login = () => {
                 Username or Email
               </label>
 
-              <input  id="login"  type="text"  placeholder="Enter your username or email"
+              <input  id="login"  type="text"  placeholder="Enter your username or email" value={loginData.login} onChange={handleChange}
                 className="w-full border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-orange-500/70 focus:bg-white/[0.05]" />
             </div>
 
@@ -51,7 +86,7 @@ const Login = () => {
                 </Link>
               </div>
 
-              <input  id="password"  type="password"  placeholder="Enter your password"
+              <input  id="password"  type="password"  placeholder="Enter your password" value={loginData.password} onChange={handleChange}
                 className="w-full border border-white/10 bg-white/[0.03] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/20 focus:border-orange-500/70 focus:bg-white/[0.05]"/>
             </div>
 
