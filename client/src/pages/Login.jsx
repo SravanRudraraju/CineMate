@@ -29,7 +29,6 @@ const Login = () => {
     })
     const data = await response.json()
     if (response.ok) {
-      alert(data.message);
       localStorage.setItem("token",data.token)
       navigate("/")
     } else {
