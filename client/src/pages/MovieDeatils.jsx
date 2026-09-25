@@ -35,6 +35,24 @@ const MovieDeatils = () => {
     fetchMovie()
   }, [id])
 
+  useEffect(()=>{
+    const checkWatchlist = async()=>{
+      if(!isLoggedIn || !Movie) return
+
+      const token = localStorage.getItem("token");
+      const response = await fetch( `http://localhost:3000/api/movies/${Movie.id}/watchlist`,
+        {
+          headers : {Authorization : `Bearer ${token}`}
+        }
+      )
+      const data = await response.json()
+
+      if(response.ok){
+        setWatchlisted(data.inWatchlist)
+      }
+    }
+    checkWatchlist()
+  },[Movie,isLoggedIn])
 
   if (!Movie) {
     return <h1 className="text-white">Loading...</h1>;
@@ -111,6 +129,30 @@ const MovieDeatils = () => {
     whereToWatch: ["Netflix", "Prime Video"]
 
   };
+
+  const handleWatchlist = async () => {
+    if (!isLoggedIn) {
+      navigate("/login")
+      return
+    }
+    
+    const token = localStorage.getItem("token")
+    const response = await fetch( `http://localhost:3000/api/movies/${Movie.id}/watchlist`,
+      {
+        method : watchlisted ? "DELETE" : "POST",
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      }
+    )
+    const data = await response.json()
+
+    if(response.ok){
+      setWatchlisted(prev => !prev)
+    }else{
+      alert(data.message)
+    }
+  }  
 
 
 
@@ -217,7 +259,7 @@ const MovieDeatils = () => {
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
             onClick={() => {
-              if(!isLoggedIn){
+              if (!isLoggedIn) {
                 navigate("/login")
                 return
               }
@@ -229,7 +271,7 @@ const MovieDeatils = () => {
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
             onClick={() => {
-              if(!isLoggedIn){
+              if (!isLoggedIn) {
                 navigate("/login")
                 return
               }
@@ -241,23 +283,20 @@ const MovieDeatils = () => {
           </button>
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
-          onClick={()=>{
-            if(!isLoggedIn){
+            onClick={() => {
+              if (!isLoggedIn) {
                 navigate("/login")
                 return
               }
-          }}>
+            }}>
             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegStar /></span>
             <span className='text-base'>RATE</span>
           </button>
 
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
-            onClick={()=>{
-              if(!isLoggedIn){
-                navigate("/login")
-                return
-              }
+            onClick={() => {
+
             }}>
             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegEdit /></span>
             <span className='text-base'>REVIEW</span>
@@ -265,22 +304,16 @@ const MovieDeatils = () => {
           </button>
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
-            onClick={() => {
-              if(!isLoggedIn){
-                navigate("/login")
-                return
-              }
-              !watchlisted ? setWatchlisted(true) : setWatchlisted(false)
-            }}>
+            onClick={handleWatchlist}>
             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'>{watchlisted ? <FaClock className='text-orange-400/80' /> : <FaRegClock />}</span>
             <span className='text-base'>{watchlisted ? "IN WATCHLIST" : "WATCHLIST"}</span>
           </button>
 
-          <div className="group flex flex-col items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white" onClick={()=>{
-            if(!isLoggedIn){
-                navigate("/login")
-                return
-              }
+          <div className="group flex flex-col items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white" onClick={() => {
+            if (!isLoggedIn) {
+              navigate("/login")
+              return
+            }
           }}>
             <button className='w-28 flex flex-col items-center text-3xl transition-transform duration-200 group-hover:scale-110'><MdPlaylistAdd /></button>
             <p className="text-md">ADD TO LISTS...</p>

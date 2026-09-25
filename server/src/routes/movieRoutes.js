@@ -22,12 +22,55 @@ router.post("/:id/watchlist", authMiddleware , async (req,res)=>{
         })
 
     }catch(error){
-        console.log(error);
+        console.error(error);
         
         res.status(500).json({
             message : "Failed to add movie to watchlist"
         })
 
+    }
+})
+router.delete("/:id/watchlist",authMiddleware,async(req,res)=>{
+    try{
+        const userId = req.userId
+        const movieId = req.params.id
+
+        const result = await pool.query(`DELETE FROM WATCHLIST WHERE user_id = $1 and tmdb_movie_id = $2 returning  *`,[userId,movieId])
+
+        if(result.rows.length ===0){
+            return res.status(400).json({
+                message : "Movie is not in watchlist"
+            })
+        }
+        res.status(200).json({
+            message : "Movie removed from watchlist"
+        })
+
+    }catch(error){
+        console.error(error)
+        
+        res.status(500).json({
+            message : "Failed to remove from watchlist"
+        })
+
+    }
+})
+
+router.get("/:id/watchlist",authMiddleware, async(req,res)=>{
+    try{
+        const userId = req.userId;
+        const movieId  = req.params.id
+
+        const result = await pool.query(`SELECT 1 FROM watchlist WHERE user_id = $1 AND tmdb_movie_id = $2`,[userId,movieId])
+
+        res.status(200).json({
+            inWatchlist : result.rows.length > 0
+        })
+    }catch(error){
+        console.error(error)
+        res.status(500).json({
+            message : "Failed to check watchlist"
+        })
     }
 })
 
