@@ -157,10 +157,33 @@ router.post("/:id/watch", authMiddleware, async (req, res) => {
         res.status(201).json({
             message: "movie marked as watched"
         })
-    }catch(error){
+    } catch (error) {
         console.error(error)
         res.status(500).json({
-            message : "failed to mark the movie as watched"
+            message: "failed to mark the movie as watched"
+        })
+    }
+})
+
+router.delete("/:id/watch", authMiddleware, async (req, res) => {
+    try {
+        const userId = req.userId
+        const movieId = req.params.id
+
+        const result = await pool.query(`DELETE FROM watched_movies WHERE user_id = $1 AND tmdb_movie_id = $2 RETURNING *`, [userId, movieId])
+
+        if (result.rows.length === 0) {
+            return res.status(400).json({
+                message: "movie not marked as watched"
+            })
+        }
+        res.status(200).json({
+            message: "movie unwatched"
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            message: "failed to unwatch the movie"
         })
     }
 })
