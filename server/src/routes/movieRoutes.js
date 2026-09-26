@@ -188,4 +188,22 @@ router.delete("/:id/watch", authMiddleware, async (req, res) => {
     }
 })
 
+router.get("/:id/watch", authMiddleware, async (req, res) => {
+    try {
+        const userId = req.userId
+        const movieId = req.params.id
+
+        const result = await pool.query("SELECT 1 FROM watched_movies WHERE user_id = $1 AND tmdb_movie_id = $2", [userId, movieId])
+
+        res.status(200).json({
+            isWatched: result.rows.length > 0
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            message: "failed to check watched status"
+        })
+    }
+})
+
 export default router
