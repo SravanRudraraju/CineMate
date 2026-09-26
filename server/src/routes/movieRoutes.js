@@ -130,12 +130,37 @@ router.get("/:id/like", authMiddleware, async (req, res) => {
         const result = await pool.query(`SELECT 1 FROM liked_movies WHERE user_id = $1 and tmdb_movie_id = $2`, [userId, movieId])
 
         res.status(200).json({
-            isLiked : result.rows.length > 0
+            isLiked: result.rows.length > 0
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            message: "failed to check liked status"
+        })
+    }
+})
+
+
+router.post("/:id/watch", authMiddleware, async (req, res) => {
+    try {
+
+
+        const userId = req.userId
+        const movieId = req.params.id
+        const result = await pool.query(`INSERT INTO watched_movies(user_id, tmdb_movie_id) VALUES($1,$2) ON CONFLICT (user_id, tmdb_movie_id) DO NOTHING RETURNING *`, [userId, movieId])
+
+        if (result.rows.length === 0) {
+            return res.status(200).json({
+                message: "movie already marked as watched"
+            })
+        }
+        res.status(201).json({
+            message: "movie marked as watched"
         })
     }catch(error){
         console.error(error)
         res.status(500).json({
-            message : "failed to check liked status"
+            message : "failed to mark the movie as watched"
         })
     }
 })
