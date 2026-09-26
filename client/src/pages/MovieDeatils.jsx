@@ -35,24 +35,44 @@ const MovieDeatils = () => {
     fetchMovie()
   }, [id])
 
-  useEffect(()=>{
-    const checkWatchlist = async()=>{
-      if(!isLoggedIn || !Movie) return
+  useEffect(() => {
+    const checkWatchlist = async () => {
+      if (!isLoggedIn || !Movie) return
 
       const token = localStorage.getItem("token");
-      const response = await fetch( `http://localhost:3000/api/movies/${Movie.id}/watchlist`,
+      const response = await fetch(`http://localhost:3000/api/movies/${Movie.id}/watchlist`,
         {
-          headers : {Authorization : `Bearer ${token}`}
+          headers: { Authorization: `Bearer ${token}` }
         }
       )
       const data = await response.json()
 
-      if(response.ok){
+      if (response.ok) {
         setWatchlisted(data.inWatchlist)
       }
     }
     checkWatchlist()
-  },[Movie,isLoggedIn])
+  }, [Movie, isLoggedIn])
+
+  useEffect(() => {
+    const checkLiked = async () => {
+      if (!isLoggedIn || !Movie) return
+
+      const token = localStorage.getItem("token")
+      const response = await fetch(`http://localhost:3000/api/movies/${Movie.id}/like`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      const data = await response.json()
+      if(response.ok){
+        setLiked(data.isLiked)
+      }
+    }
+    checkLiked()
+  },[Movie , isLoggedIn])
 
   if (!Movie) {
     return <h1 className="text-white">Loading...</h1>;
@@ -135,26 +155,47 @@ const MovieDeatils = () => {
       navigate("/login")
       return
     }
-    
+
     const token = localStorage.getItem("token")
-    const response = await fetch( `http://localhost:3000/api/movies/${Movie.id}/watchlist`,
+    const response = await fetch(`http://localhost:3000/api/movies/${Movie.id}/watchlist`,
       {
-        method : watchlisted ? "DELETE" : "POST",
-        headers : {
-          Authorization : `Bearer ${token}`
+        method: watchlisted ? "DELETE" : "POST",
+        headers: {
+          Authorization: `Bearer ${token}`
         }
       }
     )
     const data = await response.json()
 
-    if(response.ok){
+    if (response.ok) {
       setWatchlisted(prev => !prev)
-    }else{
+    } else {
       alert(data.message)
     }
-  }  
+  }
 
+  const handleLikedMovies = async () => {
+    if (!isLoggedIn) {
+      navigate("/login")
+      return
+    }
+    const token = localStorage.getItem("token")
 
+    const response = await fetch(`http://localhost:3000/api/movies/${Movie.id}/like`,
+      {
+        method: liked ? "DELETE" : "POST",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    const data = await response.json()
+    if (response.ok) {
+      setLiked(prev => !prev)
+    } else {
+      alert(data.message)
+    }
+  }
 
 
 
@@ -270,13 +311,7 @@ const MovieDeatils = () => {
           </button>
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
-            onClick={() => {
-              if (!isLoggedIn) {
-                navigate("/login")
-                return
-              }
-              !liked ? setLiked(true) : setLiked(false)
-            }}>
+            onClick={handleLikedMovies}>
             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> {liked ? <FaHeart className='text-pink-800' /> : <FaRegHeart />}</span>
             <span className='text-base'>{liked ? "LIKED" : "LIKE"}</span>
 
