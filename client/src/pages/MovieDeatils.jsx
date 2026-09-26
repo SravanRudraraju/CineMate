@@ -74,6 +74,25 @@ const MovieDeatils = () => {
     checkLiked()
   },[Movie , isLoggedIn])
 
+  useEffect(()=>{
+    const CheckWatched = async()=>{
+      if(!isLoggedIn || !Movie) return
+      const token = localStorage.getItem("token")
+      const response = await fetch(`http://localhost:3000/api/movies/${Movie.id}/watch`,
+        {
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        }
+      )
+      const data = await response.json()
+      if(response.ok){
+        setWatched(data.isWatched)
+      }
+    }
+    CheckWatched()
+  },[Movie,isLoggedIn])
+
   if (!Movie) {
     return <h1 className="text-white">Loading...</h1>;
   }
@@ -197,6 +216,33 @@ const MovieDeatils = () => {
     }
   }
 
+  const handleWatchedMovies = async() =>{
+    if(!isLoggedIn){
+      navigate("/login")
+      return
+    }
+    const token = localStorage.getItem("token")
+    const response = await fetch(`http://localhost:3000/api/movies/${Movie.id}/watch`,
+      {
+        method : watched ? "DELETE" : "POST",
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      }
+    )
+    const data = await response.json()
+    if(response.ok){
+      if(watched){
+        setWatched(false)
+      }else{
+        setWatched(true)
+        setWatchlisted(false)
+      }
+      
+    }else{
+      alert(data.message)
+    }
+  }
 
 
   return (
@@ -299,13 +345,7 @@ const MovieDeatils = () => {
         <div className='w-[70%] m-auto mt-10 flex justify-between rounded-2xl border border-white/10 bg-black/30 backdrop-blur-md px-8 py-5'>
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
-            onClick={() => {
-              if (!isLoggedIn) {
-                navigate("/login")
-                return
-              }
-              !watched ? setWatched(true) : setWatched(false)
-            }}>
+            onClick={handleWatchedMovies}>
             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'>  {watched ? <FaEye className='text-green-700' /> : <FaRegEye />} </span>
             <span className='text-base'>{watched ? "WATCHED" : "WATCH"}</span>
           </button>

@@ -152,11 +152,15 @@ router.post("/:id/watch", authMiddleware, async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(200).json({
                 message: "movie already marked as watched"
+                
             })
         }
+
         res.status(201).json({
             message: "movie marked as watched"
         })
+        await pool.query(`DELETE FROM watchlist WHERE user_id = $1 and tmdb_movie_id = $2`,[userId,movieId])
+
     } catch (error) {
         console.error(error)
         res.status(500).json({
