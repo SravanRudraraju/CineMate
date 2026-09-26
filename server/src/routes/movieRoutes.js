@@ -113,13 +113,31 @@ router.delete("/:id/like", authMiddleware, async (req, res) => {
         res.status(200).json({
             message: "movie unliked"
         })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            message: "failed to unlike the movie"
+        })
+    }
+
+})
+
+router.get("/:id/like", authMiddleware, async (req, res) => {
+    try {
+        const userId = req.userId
+        const movieId = req.params.id
+
+        const result = await pool.query(`SELECT 1 FROM liked_movies WHERE user_id = $1 and tmdb_movie_id = $2`, [userId, movieId])
+
+        res.status(200).json({
+            isLiked : result.rows.length > 0
+        })
     }catch(error){
         console.error(error)
         res.status(500).json({
-            message : "failed to unlike the movie"
+            message : "failed to check liked status"
         })
     }
-    
 })
 
 export default router
