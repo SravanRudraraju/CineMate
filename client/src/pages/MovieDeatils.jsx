@@ -95,6 +95,25 @@ const MovieDeatils = () => {
     CheckWatched()
   }, [Movie, isLoggedIn])
 
+  useEffect(() => {
+    const checkRating = async () => {
+      if (!isLoggedIn || !Movie) return
+      const token = localStorage.getItem("token")
+      const response = await fetch(`http://localhost:3000/api/movies/${Movie.id}/rating`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      const data = await response.json()
+      if (response.ok) {
+        setRating(Number(data.rating))
+      }
+    }
+    checkRating()
+  }, [Movie, isLoggedIn])
+
   if (!Movie) {
     return <h1 className="text-white">Loading...</h1>;
   }
@@ -246,6 +265,55 @@ const MovieDeatils = () => {
     }
   }
 
+  const handleRatings = async (selectedRating) => {
+    if (!isLoggedIn) {
+      navigate("/login")
+      return
+    }
+    const token = localStorage.getItem("token")
+    const response = await fetch(`http://localhost:3000/api/movies/${Movie.id}/rating`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          rating: selectedRating
+        })
+      }
+    )
+    if (response.ok) {
+      setRatingOpen(false)
+    } else {
+      const data = await response.json()
+      alert(data.message)
+    }
+  }
+
+  const handleDeleteRating = async () => {
+    if (!isLoggedIn) {
+      navigate("/login")
+      return
+    }
+
+    const token = localStorage.getItem("token")
+
+    const response = await fetch(`http://localhost:3000/api/movies/${Movie.id}/rating`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    if (response.ok) {
+      setRating(0)
+      setRatingOpen(false)
+    } else {
+      const data = await response.json()
+      alert(data.message)
+    }
+  }
 
   return (
     <div className='relative isolate min-h-screen'>
@@ -368,53 +436,66 @@ const MovieDeatils = () => {
                 }
                 setRatingOpen(prev => !prev)
               }}>
-              <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegStar /></span>
-              <span className='text-base'>RATE</span>
+              {(rating > 0) ?
+                 (<><span className='text-4xl text-amber-400 transition-transform duration-200 group-hover:scale-110'> <FaStar /></span>
+                    <span className='text-base'>RATED</span> </>) :
+                    (<><span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegStar /></span>
+                  <span className='text-base'>RATE</span> </>)
+              }
+
             </button>
-            {ratingOpen && (
-              <div className="absolute bottom-full left-1/2 mb-3 -translate-x-1/2">
-                <div className="relative flex items-center gap-1 rounded-2xl border border-white/15 bg-gradient-to-br from-purple-950 via-slate-900 to-black px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.55)]">
 
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <div key={star} className="relative h-9 w-9">
 
-                      <FaRegStar className="absolute inset-0 h-9 w-9 text-white/40" />
+            <div className={`absolute bottom-full left-1/2 mb-3 -translate-x-1/2 transition-all duration-300 ease-out ${ratingOpen ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none translate-y-2 scale-95 opacity-0"}`}>
+              <div className="relative flex items-center gap-1 rounded-2xl border border-white/15 bg-gradient-to-br from-purple-950 via-slate-900 to-black px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.55)]">
 
-                      {rating >= star && (
-                        <FaStar className="absolute inset-0 h-9 w-9 text-amber-400" />
-                      )}
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <div key={star} className="relative h-9 w-9">
 
-                      {rating === star - 0.5 && (
-                        <div className="absolute inset-0 w-1/2 overflow-hidden">
-                          <FaStar className="h-9 w-9 max-w-none text-amber-400" />
-                        </div>
-                      )}
+                    <FaRegStar className="absolute inset-0 h-9 w-9 text-white/40" />
 
-                      <button
-                        className="absolute left-0 top-0 h-full w-1/2"
-                        onClick={() => setRating(star - 0.5)}
-                      />
+                    {rating >= star && (
+                      <FaStar className="absolute inset-0 h-9 w-9 text-amber-400" />
+                    )}
 
-                      <button
-                        className="absolute right-0 top-0 h-full w-1/2"
-                        onClick={() => setRating(star)}
-                      />
+                    {rating === star - 0.5 && (
+                      <div className="absolute inset-0 w-1/2 overflow-hidden">
+                        <FaStar className="h-9 w-9 max-w-none text-amber-400" />
+                      </div>
+                    )}
 
-                    </div>
-                  ))}
+                    <button
+                      className="absolute left-0 top-0 h-full w-1/2"
+                      onClick={() => {
+                        setRating(star - 0.5)
+                        handleRatings(star - 0.5)
+                      }
+                      }
+                    />
 
-                  <button
-                    onClick={() => setRating(0)}
-                    className="ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-2xl font-bold leading-none text-white/50 transition hover:bg-white/10 hover:text-white"
-                  >
-                    ×
-                  </button>
+                    <button
+                      className="absolute right-0 top-0 h-full w-1/2"
+                      onClick={() => {
+                        setRating(star)
+                        handleRatings(star)
+                      }}
+                    />
 
-                  <div className="absolute -bottom-2 left-1/2 h-0 w-0 -translate-x-1/2 border-l-[9px] border-r-[9px] border-t-[9px] border-l-transparent border-r-transparent border-t-slate-900" />
+                  </div>
+                ))}
 
-                </div>
+                <button
+                  onClick={handleDeleteRating}
+                  className="ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-2xl font-bold leading-none text-white/50 transition hover:bg-white/10 hover:text-white"
+                >
+                  ×
+                </button>
+
+                <div className="absolute -bottom-2 left-1/2 h-0 w-0 -translate-x-1/2 border-l-[9px] border-r-[9px] border-t-[9px] border-l-transparent border-r-transparent border-t-slate-900" />
+
               </div>
-            )}
+            </div>
+
           </div>
 
 

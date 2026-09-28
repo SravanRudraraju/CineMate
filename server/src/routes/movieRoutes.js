@@ -260,4 +260,28 @@ router.delete("/:id/rating", authMiddleware, async(req,res)=>{
     }
 })
 
+router.get("/:id/rating", authMiddleware, async (req, res) => {
+    try {
+        const userId = req.userId
+        const movieId = req.params.id
+        
+
+        const result = await pool.query("SELECT rating FROM ratings WHERE user_id = $1 AND tmdb_movie_id = $2", [userId, movieId])
+
+        if(result.rows.length === 0){
+            return res.status(200).json({
+                rating : null
+            })
+        }
+        res.status(200).json({
+            rating: result.rows[0].rating
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            message: "failed to fetch rating"
+        })
+    }
+})
+
 export default router
