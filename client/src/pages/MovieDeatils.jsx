@@ -8,6 +8,7 @@ import {
   FaRegClock, FaClock, FaRegEye, FaEye, FaRegHeart, FaHeart, FaRegStar, FaStar, FaRegEdit
 } from "react-icons/fa";
 import { MdPlaylistAdd } from "react-icons/md";
+import DiaryEntry from '../components/DiaryEntry';
 
 
 const MovieDeatils = () => {
@@ -26,6 +27,8 @@ const MovieDeatils = () => {
 
   const [ratingOpen, setRatingOpen] = useState(false)
   const [rating, setRating] = useState(0)
+
+  const [diaryOpen, setDiaryOpen] = useState(false)
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -437,9 +440,9 @@ const MovieDeatils = () => {
                 setRatingOpen(prev => !prev)
               }}>
               {(rating > 0) ?
-                 (<><span className='text-4xl text-amber-400 transition-transform duration-200 group-hover:scale-110'> <FaStar /></span>
-                    <span className='text-base'>RATED</span> </>) :
-                    (<><span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegStar /></span>
+                (<><span className='text-4xl text-amber-400 transition-transform duration-200 group-hover:scale-110'> <FaStar /></span>
+                  <span className='text-base'>RATED</span> </>) :
+                (<><span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegStar /></span>
                   <span className='text-base'>RATE</span> </>)
               }
 
@@ -502,10 +505,14 @@ const MovieDeatils = () => {
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
             onClick={() => {
-
+              if (!isLoggedIn) {
+                navigate("/login")
+                return
+              }
+              setDiaryOpen(true)
             }}>
             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegEdit /></span>
-            <span className='text-base'>REVIEW</span>
+            <span className='text-base'>LOG / REVIEW</span>
 
           </button>
 
@@ -618,6 +625,12 @@ const MovieDeatils = () => {
         </section>
       </main>
 
+      {diaryOpen && (
+        <DiaryEntry
+          Movie={Movie}
+          onClose={() => setDiaryOpen(false)}
+        />
+      )}
 
     </div>
 
