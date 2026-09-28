@@ -152,14 +152,14 @@ router.post("/:id/watch", authMiddleware, async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(200).json({
                 message: "movie already marked as watched"
-                
+
             })
         }
 
         res.status(201).json({
             message: "movie marked as watched"
         })
-        await pool.query(`DELETE FROM watchlist WHERE user_id = $1 and tmdb_movie_id = $2`,[userId,movieId])
+        await pool.query(`DELETE FROM watchlist WHERE user_id = $1 and tmdb_movie_id = $2`, [userId, movieId])
 
     } catch (error) {
         console.error(error)
@@ -206,6 +206,35 @@ router.get("/:id/watch", authMiddleware, async (req, res) => {
         console.error(error)
         res.status(500).json({
             message: "failed to check watched status"
+        })
+    }
+})
+
+router.put("/:id/rating", authMiddleware, async (req, res) => {
+    try {
+
+
+        const userId = req.userId
+        const movieId = req.params.id
+        const {rating} = req.body
+
+        if (rating < 0.5 || rating > 5) {
+            res.status(400).json({
+                message: "rating must be between 0.5 and 5 in half star increments"
+            })
+        }
+
+        const result = await pool.query(`INSERT INTO ratings (user_id, tmdb_movie_id,rating) VALUES($1,$2,$3) ON CONFLICT(user_id, tmdb_movie_id) DO UPDATE SET rating = EXCLUDED.rating RETURNING *`, [userId, movieId, rating])
+
+        res.status(200).json({
+            message: "rating saved successfully",
+            rating: result.rows[0]
+        })
+    }catch(error){
+        console.error(error)
+
+        res.status(500).json({
+            message : "Failed to save rating"
         })
     }
 })

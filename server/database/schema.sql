@@ -30,3 +30,12 @@ CREATE TABLE watched_movies(
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 )
 
+CREATE TABLE ratings (
+	user_id INTEGER NOT NULL,
+	tmdb_movie_id INTEGER NOT NULL,
+	rating NUMERIC(2,1) NOT NULL CHECK(rating>=0.5 AND rating <=5.0),
+	PRIMARY KEY (user_id , tmdb_movie_id),
+	FOREIGN KEY (user_id)
+	REFERENCES users(id)
+	ON DELETE CASCADE
+)
