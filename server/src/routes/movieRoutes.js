@@ -212,8 +212,6 @@ router.get("/:id/watch", authMiddleware, async (req, res) => {
 
 router.put("/:id/rating", authMiddleware, async (req, res) => {
     try {
-
-
         const userId = req.userId
         const movieId = req.params.id
         const {rating} = req.body
@@ -235,6 +233,29 @@ router.put("/:id/rating", authMiddleware, async (req, res) => {
 
         res.status(500).json({
             message : "Failed to save rating"
+        })
+    }
+})
+
+router.delete("/:id/rating", authMiddleware, async(req,res)=>{
+    try {
+        const userId = req.userId
+        const movieId = req.params.id
+
+        const result = await pool.query(`DELETE FROM ratings WHERE user_id = $1 AND tmdb_movie_id = $2 RETURNING *`, [userId, movieId])
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                message: "movie not rated"
+            })
+        }
+        res.status(200).json({
+            message: "movie rating deleted"
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            message: "failed to delete the rating"
         })
     }
 })
