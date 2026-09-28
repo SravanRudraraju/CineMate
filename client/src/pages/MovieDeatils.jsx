@@ -24,6 +24,8 @@ const MovieDeatils = () => {
   const castRef = useRef(null)
   const crewRef = useRef(null)
 
+  const [ratingOpen, setRatingOpen] = useState(false)
+  const [rating, setRating] = useState(0)
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -67,31 +69,31 @@ const MovieDeatils = () => {
         }
       )
       const data = await response.json()
-      if(response.ok){
+      if (response.ok) {
         setLiked(data.isLiked)
       }
     }
     checkLiked()
-  },[Movie , isLoggedIn])
+  }, [Movie, isLoggedIn])
 
-  useEffect(()=>{
-    const CheckWatched = async()=>{
-      if(!isLoggedIn || !Movie) return
+  useEffect(() => {
+    const CheckWatched = async () => {
+      if (!isLoggedIn || !Movie) return
       const token = localStorage.getItem("token")
       const response = await fetch(`http://localhost:3000/api/movies/${Movie.id}/watch`,
         {
-          headers : {
-            Authorization : `Bearer ${token}`
+          headers: {
+            Authorization: `Bearer ${token}`
           }
         }
       )
       const data = await response.json()
-      if(response.ok){
+      if (response.ok) {
         setWatched(data.isWatched)
       }
     }
     CheckWatched()
-  },[Movie,isLoggedIn])
+  }, [Movie, isLoggedIn])
 
   if (!Movie) {
     return <h1 className="text-white">Loading...</h1>;
@@ -216,30 +218,30 @@ const MovieDeatils = () => {
     }
   }
 
-  const handleWatchedMovies = async() =>{
-    if(!isLoggedIn){
+  const handleWatchedMovies = async () => {
+    if (!isLoggedIn) {
       navigate("/login")
       return
     }
     const token = localStorage.getItem("token")
     const response = await fetch(`http://localhost:3000/api/movies/${Movie.id}/watch`,
       {
-        method : watched ? "DELETE" : "POST",
-        headers : {
-          Authorization : `Bearer ${token}`
+        method: watched ? "DELETE" : "POST",
+        headers: {
+          Authorization: `Bearer ${token}`
         }
       }
     )
     const data = await response.json()
-    if(response.ok){
-      if(watched){
+    if (response.ok) {
+      if (watched) {
         setWatched(false)
-      }else{
+      } else {
         setWatched(true)
         setWatchlisted(false)
       }
-      
-    }else{
+
+    } else {
       alert(data.message)
     }
   }
@@ -357,16 +359,64 @@ const MovieDeatils = () => {
 
           </button>
 
-          <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
-            onClick={() => {
-              if (!isLoggedIn) {
-                navigate("/login")
-                return
-              }
-            }}>
-            <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegStar /></span>
-            <span className='text-base'>RATE</span>
-          </button>
+          <div className="relative">
+            <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
+              onClick={() => {
+                if (!isLoggedIn) {
+                  navigate("/login")
+                  return
+                }
+                setRatingOpen(prev => !prev)
+              }}>
+              <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> <FaRegStar /></span>
+              <span className='text-base'>RATE</span>
+            </button>
+            {ratingOpen && (
+              <div className="absolute bottom-full left-1/2 mb-3 -translate-x-1/2">
+                <div className="relative flex items-center gap-1 rounded-2xl border border-white/15 bg-gradient-to-br from-purple-950 via-slate-900 to-black px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.55)]">
+
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <div key={star} className="relative h-9 w-9">
+
+                      <FaRegStar className="absolute inset-0 h-9 w-9 text-white/40" />
+
+                      {rating >= star && (
+                        <FaStar className="absolute inset-0 h-9 w-9 text-amber-400" />
+                      )}
+
+                      {rating === star - 0.5 && (
+                        <div className="absolute inset-0 w-1/2 overflow-hidden">
+                          <FaStar className="h-9 w-9 max-w-none text-amber-400" />
+                        </div>
+                      )}
+
+                      <button
+                        className="absolute left-0 top-0 h-full w-1/2"
+                        onClick={() => setRating(star - 0.5)}
+                      />
+
+                      <button
+                        className="absolute right-0 top-0 h-full w-1/2"
+                        onClick={() => setRating(star)}
+                      />
+
+                    </div>
+                  ))}
+
+                  <button
+                    onClick={() => setRating(0)}
+                    className="ml-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-2xl font-bold leading-none text-white/50 transition hover:bg-white/10 hover:text-white"
+                  >
+                    ×
+                  </button>
+
+                  <div className="absolute -bottom-2 left-1/2 h-0 w-0 -translate-x-1/2 border-l-[9px] border-r-[9px] border-t-[9px] border-l-transparent border-r-transparent border-t-slate-900" />
+
+                </div>
+              </div>
+            )}
+          </div>
+
 
 
           <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
