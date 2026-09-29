@@ -6,7 +6,7 @@ import {
     FaRegStar,
 } from "react-icons/fa";
 
-const DiaryEntry = ({ Movie, liked: initialLiked, onClose }) => {
+const DiaryEntry = ({ Movie, liked: initialLiked, onClose, onSave }) => {
     const [rating, setRating] = useState(0);
     const [liked, setLiked] = useState(initialLiked);
     const [review, setReview] = useState("");
@@ -189,7 +189,11 @@ const DiaryEntry = ({ Movie, liked: initialLiked, onClose }) => {
                         {/* Save */}
                         <div className="mt-6 flex justify-end">
 
-                            <button className="relative overflow-hidden rounded-full bg-gradient-to-r from-white via-white to-purple-100 px-8 py-3.5 text-sm font-bold text-black shadow-[0_8px_30px_rgba(255,255,255,0.08)] transition duration-300 hover:scale-[1.04] hover:shadow-[0_8px_35px_rgba(168,85,247,0.25)] active:scale-[0.97]">
+                            <button className="relative overflow-hidden rounded-full bg-gradient-to-r from-white via-white to-purple-100 px-8 py-3.5 text-sm font-bold text-black shadow-[0_8px_30px_rgba(255,255,255,0.08)] transition duration-300 hover:scale-[1.04] hover:shadow-[0_8px_35px_rgba(168,85,247,0.25)] active:scale-[0.97]"
+                            onClick={()=>{
+                                onSave(watchedDate,rating,liked,review)
+                            }}
+                            >
                                 SAVE
                             </button>
 

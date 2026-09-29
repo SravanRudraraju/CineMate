@@ -318,6 +318,43 @@ const MovieDeatils = () => {
     }
   }
 
+  const handleDiaryEntry = async (watchedDate, rating, liked,review) =>{
+    if (!isLoggedIn) {
+      navigate("/login")
+      return
+    }
+    const token = localStorage.getItem("token")
+    const response = await fetch(`http://localhost:3000/api/movies/${Movie.id}/diary`,
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          watched_on : watchedDate,
+          rating: rating >0 ? rating : null,
+          liked : liked,
+          review : review
+        })
+      }
+    )
+    if (response.ok) {
+      setWatched(true)
+      setWatchlisted(false)
+      setLiked(liked)
+      if(rating>0){
+        setRating(rating  )
+      }
+      setDiaryOpen(false)
+
+    } else {
+      const data = await response.json()
+      alert(data.message)
+      
+    }
+  }
+
   return (
     <div className='relative isolate min-h-screen'>
       <div className='fixed inset-0 bg-cover bg-center z-0' style={{ backgroundImage: `url(https://image.tmdb.org/t/p/original${Movie.backdrop_path})` }} />
@@ -630,6 +667,7 @@ const MovieDeatils = () => {
           Movie={Movie}
           liked = {liked}
           onClose={() => setDiaryOpen(false)}
+          onSave = {handleDiaryEntry}
         />
       )}
 
