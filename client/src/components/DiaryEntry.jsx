@@ -6,12 +6,32 @@ import {
     FaRegStar,
 } from "react-icons/fa";
 
-const DiaryEntry = ({ Movie, liked: initialLiked, rating: initalRating, review: initialReview, watchedDate: initialWatchedDate, onClose, onSave }) => {
+const DiaryEntry = ({ entryId, Movie, liked: initialLiked, rating: initalRating, review: initialReview, watchedDate: initialWatchedDate, onClose, onSave,onDelete }) => {
     const [rating, setRating] = useState(initalRating || 0);
     const [liked, setLiked] = useState(initialLiked || false);
     const [review, setReview] = useState(initialReview || "");
-    const [watchedDate, setWatchedDate] = useState(initialWatchedDate  ? initialWatchedDate.slice(0, 10) : new Date().toISOString().split("T")[0]
+    const [watchedDate, setWatchedDate] = useState(initialWatchedDate ? initialWatchedDate.slice(0, 10) : new Date().toISOString().split("T")[0]
     );
+
+    const handleDeleteEntry = async () => {
+        const token = localStorage.getItem("token")
+        const response = await fetch(`http://localhost:3000/api/diary/${entryId}`,
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+        if (response.ok) {
+            onDelete(entryId)
+        
+        } else {
+            const data = await response.json()
+            alert(data.message)
+        }
+    }
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#050507] px-4">
 
@@ -186,9 +206,15 @@ const DiaryEntry = ({ Movie, liked: initialLiked, rating: initalRating, review: 
 
                         </div>
 
-                        {/* Save */}
-                        <div className="mt-6 flex justify-end">
-
+                        {/* Save and delete*/}
+                        <div className="mt-6 flex justify-end gap-3">
+                            <button
+                                type="button"
+                                className="rounded-full border border-red-400/20 px-6 py-3.5 text-sm font-semibold text-red-400 transition hover:border-red-400/40 hover:bg-red-400/10 hover:text-red-300"
+                                onClick={handleDeleteEntry}
+                            >
+                                DELETE
+                            </button>
                             <button className="relative overflow-hidden rounded-full bg-gradient-to-r from-white via-white to-purple-100 px-8 py-3.5 text-sm font-bold text-black shadow-[0_8px_30px_rgba(255,255,255,0.08)] transition duration-300 hover:scale-[1.04] hover:shadow-[0_8px_35px_rgba(168,85,247,0.25)] active:scale-[0.97]"
                                 onClick={() => {
                                     onSave(watchedDate, rating, liked, review)

@@ -30,46 +30,52 @@ const Diary = () => {
 
 
   const handleEditDiary = async (watchedDate, rating, liked, review) => {
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-  const updatedData = {
-    watched_on: watchedDate,
-    rating: rating || null,
-    liked,
-    review
-  };
+    const updatedData = {
+      watched_on: watchedDate,
+      rating: rating || null,
+      liked,
+      review
+    };
 
 
-  const response = await fetch(
-    `http://localhost:3000/api/diary/${editingEntry.id}`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(updatedData)
+    const response = await fetch(
+      `http://localhost:3000/api/diary/${editingEntry.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(updatedData)
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.message);
+      return;
     }
-  );
 
-  const data = await response.json();
+    setDiary((prev) =>
+      prev.map((entry) =>
+        entry.id === editingEntry.id
+          ? { ...entry, ...updatedData }
+          : entry
+      )
+    );
 
-  if (!response.ok) {
-    alert(data.message);
-    return;
-  }
+    setEditingEntry(null);
+  };
+  const handleDeleteEntry = (entryId) => {
+    setDiary((prev) =>
+      prev.filter((entry) => entry.id !== entryId)
+    );
 
-  setDiary((prev) =>
-    prev.map((entry) =>
-      entry.id === editingEntry.id
-        ? { ...entry, ...updatedData }
-        : entry
-    )
-  );
-
-  setEditingEntry(null);
-};
-
+    setEditingEntry(null);
+  };
   return (
     <div className="mx-auto mt-8 w-full max-w-7xl px-8">
       {diary.map((entry) => {
@@ -173,6 +179,7 @@ const Diary = () => {
       })}
       {editingEntry && (
         <DiaryEntry
+          entryId={editingEntry.id}
           Movie={{
             id: editingEntry.tmdb_movie_id,
             title: editingEntry.title,
@@ -184,7 +191,8 @@ const Diary = () => {
           review={editingEntry.review || ""}
           watchedDate={editingEntry.watched_on}
           onClose={() => setEditingEntry(null)}
-           onSave={handleEditDiary}
+          onSave={handleEditDiary}
+          onDelete={handleDeleteEntry}
         />
       )}
     </div>

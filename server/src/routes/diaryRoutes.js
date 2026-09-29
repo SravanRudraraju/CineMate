@@ -22,9 +22,9 @@ router.get("/", authMiddleware, async (req, res) => {
 router.put("/:id", authMiddleware, async (req, res) => {
     try {
         const entryId = req.params.id
-        const userId = req.userId   
+        const userId = req.userId
         const { watched_on, rating, liked, review } = req.body
-    
+
         const result = await pool.query(`UPDATE diary_entries SET watched_on = $1, rating = $2, liked = $3 , review = $4 WHERE id=$5 and user_id = $6 RETURNING *`, [watched_on, rating, liked, review, entryId, userId])
 
         if (result.rows.length === 0) {
@@ -32,7 +32,7 @@ router.put("/:id", authMiddleware, async (req, res) => {
                 message: "Diary entry not found"
             })
         }
-        res.status(201).json({
+        res.status(200).json({
             message: "diary entry updated successfully",
             rating: result.rows[0]
         })
@@ -43,5 +43,22 @@ router.put("/:id", authMiddleware, async (req, res) => {
         })
     }
 
+})
+
+router.delete("/:id", authMiddleware, async (req, res) => {
+    try {
+        const entryId = req.params.id
+        const userId = req.userId
+        await pool.query(`DELETE FROM diary_entries WHERE id = $1 AND user_id = $2`, [entryId, userId])
+
+        res.status(200).json({
+            message: "entry deleted"
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            message: 'failed to delete entry'
+        })
+    }
 })
 export default router
