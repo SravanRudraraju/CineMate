@@ -39,3 +39,17 @@ CREATE TABLE ratings (
 	REFERENCES users(id)
 	ON DELETE CASCADE
 )
+
+CREATE TABLE diary_entries (
+	id SERIAL PRIMARY KEY,
+	user_id INTEGER NOT NULL,
+	tmdb_movie_id INTEGER NOT NULL,
+	watched_on DATE NOT NULL DEFAULT CURRENT_DATE,
+	review TEXT,
+	rating NUMERIC(2,1),
+	liked BOOLEAN DEFAULT FALSE,
+	FOREIGN KEY (user_id)
+	REFERENCES users(id)
+	ON DELETE CASCADE,
+	CHECK (rating >=0.5 AND rating <=5.0)
+)

@@ -6,9 +6,9 @@ import {
     FaRegStar,
 } from "react-icons/fa";
 
-const DiaryEntry = ({ Movie, onClose }) => {
+const DiaryEntry = ({ Movie, liked: initialLiked, onClose }) => {
     const [rating, setRating] = useState(0);
-    const [liked, setLiked] = useState(false);
+    const [liked, setLiked] = useState(initialLiked);
     const [review, setReview] = useState("");
     const [watchedDate, setWatchedDate] = useState("");
 

@@ -628,6 +628,7 @@ const MovieDeatils = () => {
       {diaryOpen && (
         <DiaryEntry
           Movie={Movie}
+          liked = {liked}
           onClose={() => setDiaryOpen(false)}
         />
       )}
