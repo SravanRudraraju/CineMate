@@ -5,6 +5,7 @@ import cors from "cors";
 import pool from "./db.js";
 import authRoutes from "./routes/authRoutes.js"
 import movieRoutes from "./routes/movieRoutes.js"
+import diaryRoutes from "./routes/diaryRoutes.js";
 
 const app = express()
 const port = 3000
@@ -12,8 +13,11 @@ const port = 3000
 app.use(express.json())
 app.use(cors());
 
+
 app.use("/api/auth",authRoutes)
 app.use("/api/movies",movieRoutes)
+app.use("/api/diary",diaryRoutes)
+
 
 
 app.get("/api/movies/trending", async(req,res)=>{

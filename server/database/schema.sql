@@ -53,3 +53,10 @@ CREATE TABLE diary_entries (
 	ON DELETE CASCADE,
 	CHECK (rating >=0.5 AND rating <=5.0)
 )
+
+CREATE TABLE movies (
+    tmdb_movie_id INTEGER PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    poster_path TEXT,
+    release_date DATE
+);
