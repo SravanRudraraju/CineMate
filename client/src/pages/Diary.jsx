@@ -1,9 +1,12 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { FaRegEdit, FaHeart, FaStar, FaRegStar,FaRegHeart  } from "react-icons/fa";
+import { FaRegEdit, FaHeart, FaStar, FaRegStar, FaRegHeart } from "react-icons/fa";
+import DiaryEntry from "../components/DiaryEntry";
 
 const Diary = () => {
   const [diary, setDiary] = useState([])
+
+  const [editingEntry, setEditingEntry] = useState(null);
 
   useEffect(() => {
     const fetchDiary = async () => {
@@ -24,7 +27,48 @@ const Diary = () => {
     }
     fetchDiary()
   }, [])
-  console.log(diary)
+
+
+  const handleEditDiary = async (watchedDate, rating, liked, review) => {
+  const token = localStorage.getItem("token");
+
+  const updatedData = {
+    watched_on: watchedDate,
+    rating: rating || null,
+    liked,
+    review
+  };
+
+
+  const response = await fetch(
+    `http://localhost:3000/api/diary/${editingEntry.id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(updatedData)
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    alert(data.message);
+    return;
+  }
+
+  setDiary((prev) =>
+    prev.map((entry) =>
+      entry.id === editingEntry.id
+        ? { ...entry, ...updatedData }
+        : entry
+    )
+  );
+
+  setEditingEntry(null);
+};
 
   return (
     <div className="mx-auto mt-8 w-full max-w-7xl px-8">
@@ -118,7 +162,7 @@ const Diary = () => {
 
               {/* Edit */}
               <button
-                title="Edit diary entry"
+                title="Edit diary entry" onClick={() => setEditingEntry(entry)}
                 className="shrink-0 rounded-lg p-2 text-white/50 transition duration-200 hover:bg-white/[0.08] hover:text-white"
               >
                 <FaRegEdit className="h-5 w-5" />
@@ -127,7 +171,24 @@ const Diary = () => {
           </div>
         );
       })}
+      {editingEntry && (
+        <DiaryEntry
+          Movie={{
+            id: editingEntry.tmdb_movie_id,
+            title: editingEntry.title,
+            poster_path: editingEntry.poster_path,
+            release_date: editingEntry.release_date
+          }}
+          rating={Number(editingEntry.rating) || 0}
+          liked={editingEntry.liked}
+          review={editingEntry.review || ""}
+          watchedDate={editingEntry.watched_on}
+          onClose={() => setEditingEntry(null)}
+           onSave={handleEditDiary}
+        />
+      )}
     </div>
+
   )
 }
 

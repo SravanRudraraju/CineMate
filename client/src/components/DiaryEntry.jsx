@@ -6,12 +6,12 @@ import {
     FaRegStar,
 } from "react-icons/fa";
 
-const DiaryEntry = ({ Movie, liked: initialLiked, onClose, onSave }) => {
-    const [rating, setRating] = useState(0);
-    const [liked, setLiked] = useState(initialLiked);
-    const [review, setReview] = useState("");
-    const [watchedDate, setWatchedDate] = useState("");
-
+const DiaryEntry = ({ Movie, liked: initialLiked, rating: initalRating, review: initialReview, watchedDate: initialWatchedDate, onClose, onSave }) => {
+    const [rating, setRating] = useState(initalRating || 0);
+    const [liked, setLiked] = useState(initialLiked || false);
+    const [review, setReview] = useState(initialReview || "");
+    const [watchedDate, setWatchedDate] = useState(initialWatchedDate  ? initialWatchedDate.slice(0, 10) : new Date().toISOString().split("T")[0]
+    );
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#050507] px-4">
 
@@ -92,8 +92,8 @@ const DiaryEntry = ({ Movie, liked: initialLiked, onClose, onSave }) => {
                             <button
                                 onClick={() => setLiked((prev) => !prev)}
                                 className={`flex h-11 w-11 shrink-0 items-center justify-center transition duration-300 hover:scale-110 ${liked
-                                        ? "text-red-400 drop-shadow-[0_0_14px_rgba(236,72,153,0.45)]"
-                                        : "text-white/30 hover:text-white/70"
+                                    ? "text-red-400 drop-shadow-[0_0_14px_rgba(236,72,153,0.45)]"
+                                    : "text-white/30 hover:text-white/70"
                                     }`}
                             >
                                 {liked ? (
@@ -190,9 +190,9 @@ const DiaryEntry = ({ Movie, liked: initialLiked, onClose, onSave }) => {
                         <div className="mt-6 flex justify-end">
 
                             <button className="relative overflow-hidden rounded-full bg-gradient-to-r from-white via-white to-purple-100 px-8 py-3.5 text-sm font-bold text-black shadow-[0_8px_30px_rgba(255,255,255,0.08)] transition duration-300 hover:scale-[1.04] hover:shadow-[0_8px_35px_rgba(168,85,247,0.25)] active:scale-[0.97]"
-                            onClick={()=>{
-                                onSave(watchedDate,rating,liked,review)
-                            }}
+                                onClick={() => {
+                                    onSave(watchedDate, rating, liked, review)
+                                }}
                             >
                                 SAVE
                             </button>
