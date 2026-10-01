@@ -9,6 +9,10 @@ router.post("/:id/watchlist", authMiddleware, async (req, res) => {
     try {
         const userId = req.userId
         const movieId = req.params.id
+        const Movie = await getMovieById(movieId)
+
+        await pool.query(`INSERT INTO movies (tmdb_movie_id, title, poster_path, release_date) VALUES ($1, $2, $3, $4) ON CONFLICT (tmdb_movie_id) DO NOTHING`,
+            [Movie.id, Movie.title, Movie.poster_path, Movie.release_date])
 
         const result = await pool.query(`INSERT INTO watchlist (user_id, tmdb_movie_id) VALUES ($1,$2) ON CONFLICT (user_id, tmdb_movie_id) DO NOTHING RETURNING * `, [userId, movieId])
 
@@ -79,6 +83,10 @@ router.post("/:id/like", authMiddleware, async (req, res) => {
     try {
         const userId = req.userId
         const movieId = req.params.id
+        const Movie = await getMovieById(movieId)
+
+        await pool.query(`INSERT INTO movies (tmdb_movie_id, title, poster_path, release_date) VALUES ($1, $2, $3, $4) ON CONFLICT (tmdb_movie_id) DO NOTHING`,
+            [Movie.id, Movie.title, Movie.poster_path, Movie.release_date])
 
         const result = await pool.query(`INSERT INTO liked_movies(user_id, tmdb_movie_id)  values($1, $2) ON CONFLICT (user_id, tmdb_movie_id) DO NOTHING RETURNING *`, [userId, movieId])
 
@@ -148,6 +156,10 @@ router.post("/:id/watch", authMiddleware, async (req, res) => {
 
         const userId = req.userId
         const movieId = req.params.id
+        const Movie = await getMovieById(movieId)
+
+        await pool.query(`INSERT INTO movies (tmdb_movie_id, title, poster_path, release_date) VALUES ($1, $2, $3, $4) ON CONFLICT (tmdb_movie_id) DO NOTHING`,
+            [Movie.id, Movie.title, Movie.poster_path, Movie.release_date])
         const result = await pool.query(`INSERT INTO watched_movies(user_id, tmdb_movie_id) VALUES($1,$2) ON CONFLICT (user_id, tmdb_movie_id) DO NOTHING RETURNING *`, [userId, movieId])
 
         if (result.rows.length === 0) {
@@ -292,7 +304,6 @@ router.post("/:id/diary", authMiddleware, async (req, res) => {
 
         const Movie = await getMovieById(movieId)
 
-
         await pool.query(`INSERT INTO movies (tmdb_movie_id, title, poster_path, release_date) VALUES ($1, $2, $3, $4) ON CONFLICT (tmdb_movie_id) DO NOTHING`,
             [Movie.id, Movie.title, Movie.poster_path, Movie.release_date])
 
@@ -319,6 +330,23 @@ router.post("/:id/diary", authMiddleware, async (req, res) => {
             message: "failed to update diary entry"
         })
     }
+})
+
+router.get("/watched",authMiddleware, async(req,res)=>{
+    try{
+        const userId = req.userId
+        const result = await pool.query(`SELECT m.poster_path, m.tmdb_movie_id, m.title, m.release_date, l.tmdb_movie_id IS NOT NULL AS liked, r.rating  FROM watched_movies w JOIN movies m ON w.tmdb_movie_id = m.tmdb_movie_id   LEFT JOIN liked_movies l ON l.user_id = w.user_id AND l.tmdb_movie_id = m.tmdb_movie_id LEFT JOIN ratings r ON r.user_id = w.user_id AND r.tmdb_movie_id = w.tmdb_movie_id  WHERE w.user_id = $1`,[userId])
+
+        res.status(200).json({
+            watched_movies : result.rows
+        })
+    }catch(error){
+        console.error(error)
+        res.status(500).json({
+            message: "failed to fetch watched movies"
+        })
+    }
+
 })
 
 export default router
