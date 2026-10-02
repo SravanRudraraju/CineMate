@@ -1,32 +1,28 @@
 import React from 'react'
 import MovieCard from '../components/MovieCard'
-import { useState } from 'react'
-import { useEffect } from 'react'
-
-const Watched = () => {
-    const [movies, setMovies] = useState([])
-    useEffect(() => {
-        const fetchMovies = async () => {
-            const token = localStorage.getItem("token")
-
-            const response = await fetch(`http://localhost:3000/api/watched`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+import { useState,useEffect } from 'react'
+const LikedMovies = () => {
+    const [likedMovies, setLikedMovies] = useState([])
+        useEffect(() => {
+            const fetchLikedMovies = async () => {
+                const token = localStorage.getItem("token")
+                const response = await fetch(`http://localhost:3000/api/liked/movies`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
                     }
+                )
+                const data = await response.json()
+                if (response.ok) {
+                    setLikedMovies(data.liked_movies)
+                } else {
+                    alert(data.message)
                 }
-            )
-            const data = await response.json()
-            if (response.ok) {
-                setMovies(data.watched_movies)
-            } else {
-                alert(data.message)
             }
-        }
-        fetchMovies()
-    }, [])
-
-    return (
+            fetchLikedMovies()
+        }, [])
+  return (
         <div className="min-h-screen px-8 pb-16 pt-10">
             {/* Header */}
             <div className="mx-auto max-w-7xl">
@@ -36,15 +32,14 @@ const Watched = () => {
                     </h1>
 
                     <p className="text-base font-medium text-white/45">
-                        {movies.length} {movies.length === 1 ? "FILM" : "FILMS"}
+                        {likedMovies.length} {likedMovies.length === 1 ? "FILM" : "FILMS"}
                     </p>
                 </div>
 
                 {/* Movies */}
-                {movies.length > 0 ? (
+                {likedMovies.length > 0 ? (
                     <div className="mt-8 grid grid-cols-10 gap-x-6 gap-y-8">
-                        {[...movies]
-                            .sort((a, b) => new Date(b.release_date) - new Date(a.release_date))
+                        {likedMovies
                             .map((movie) => (
                                 <MovieCard
                                     key={movie.tmdb_movie_id}
@@ -57,11 +52,11 @@ const Watched = () => {
                     <div className="flex min-h-[400px] items-center justify-center">
                         <div className="text-center">
                             <p className="text-lg font-medium text-white/60">
-                                No watched movies yet
+                                No liked movies yet
                             </p>
 
                             <p className="mt-2 text-sm text-white/30">
-                                Movies you mark as watched will appear here.
+                                Movies you liked will appear here.
                             </p>
                         </div>
                     </div>
@@ -69,7 +64,6 @@ const Watched = () => {
             </div>
         </div>
     );
-};
+}
 
-
-export default Watched
+export default LikedMovies

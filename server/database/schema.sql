@@ -21,6 +21,10 @@ CREATE TABLE liked_movies(
     PRIMARY KEY (user_id , tmdb_movie_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 )
+ALTER TABLE liked_movies
+ADD COLUMN liked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+
 
 CREATE TABLE watched_movies(
     user_id INTEGER NOT NULL,

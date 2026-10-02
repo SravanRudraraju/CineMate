@@ -21,10 +21,10 @@ router.get("/watched",authMiddleware, async(req,res)=>{
     }
 })
 
-router.get("/liked",authMiddleware, async(req,res)=>{
+router.get("/liked/movies",authMiddleware, async(req,res)=>{
     try{
         const userId = req.userId
-        const result = await pool.query(`SELECT m.poster_path, m.tmdb_movie_id, m.title, m.release_date, l.tmdb_movie_id IS NOT NULL AS liked, r.rating  FROM liked_movies l JOIN movies m ON l.tmdb_movie_id = m.tmdb_movie_id LEFT JOIN ratings r ON r.user_id = l.user_id AND r.tmdb_movie_id = l.tmdb_movie_id  WHERE l.user_id = $1`,[userId])
+        const result = await pool.query(`SELECT m.poster_path, m.tmdb_movie_id, m.title, m.release_date, l.tmdb_movie_id IS NOT NULL AS liked, r.rating  FROM liked_movies l JOIN movies m ON l.tmdb_movie_id = m.tmdb_movie_id LEFT JOIN ratings r ON r.user_id = l.user_id AND r.tmdb_movie_id = l.tmdb_movie_id  WHERE l.user_id = $1 ORDER BY l.liked_at DESC`,[userId])
 
         res.status(200).json({
             liked_movies : result.rows

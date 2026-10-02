@@ -5,7 +5,7 @@ import { FaStar, FaHeart } from "react-icons/fa";
 const MovieCard = ({ movie, className = "" }) => {
   return (
     <Link
-      to={`/moviedetails/${movie.id}`}
+      to={`/moviedetails/${movie.id|| movie.tmdb_movie_id}`}
       className={`group relative block aspect-[2/3] ${className} `}
     >
       {/* Hover title */}
