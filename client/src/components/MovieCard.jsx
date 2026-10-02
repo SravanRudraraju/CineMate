@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FaStar, FaHeart } from "react-icons/fa";
 
-const MovieCard = ({ movie,className = ""}) => {
+const MovieCard = ({ movie, className = "" }) => {
   return (
     <Link
       to={`/moviedetails/${movie.id}`}
@@ -32,7 +33,42 @@ const MovieCard = ({ movie,className = ""}) => {
         {/* Hover overlay */}
         <div className="pointer-events-none absolute inset-0 rounded-xl bg-black/0 transition-all duration-300 group-hover:bg-black/15" />
       </div>
+
+      <div className="mt-1 flex h-5 items-center gap-1">
+        {movie.rating ? (
+          <div className="flex items-center gap-0">
+            {[1, 2, 3, 4, 5].map((star) => {
+              const rating = Number(movie.rating);
+              const full = rating >= star;
+              const half = rating === star - 0.5;
+
+              return (
+                <div key={star} className="relative h-4 w-4">
+                 
+                  {full && (
+                    <FaStar className="absolute h-3.5 w-3.5 text-white/60" />
+                  )}
+
+                  {half && (
+                    <div className="absolute left-0 top-0 h-4 w-2 overflow-hidden">
+                      <FaStar className="h-3.5 w-3.5 text-white/60" />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="h-4" />
+        )}
+
+        <FaHeart
+          className={`h-3.5 w-3.5 ${movie.liked ? "text-white/60" : ""
+            }`}
+        />
+      </div>
     </Link>
+
   );
 };
 
