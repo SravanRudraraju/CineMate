@@ -36,6 +36,7 @@ router.get("/liked",authMiddleware, async(req,res)=>{
         })
     }
 })
+
 router.get("/watchlist",authMiddleware, async(req,res)=>{
     try{
         const userId = req.userId
@@ -47,7 +48,7 @@ router.get("/watchlist",authMiddleware, async(req,res)=>{
     }catch(error){
         console.error(error)
         res.status(500).json({
-            message: "failed to fetch liked movies"
+            message: "failed to fetch watchlist"
         })
     }
 })
