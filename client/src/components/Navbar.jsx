@@ -39,6 +39,12 @@ const Navbar = () => {
         >
           WATCHLIST
         </Link>
+        <Link
+          to={isLoggedIn ? "/watched" : "/login"}
+          className="text-lg font-bold tracking-wide text-white/80 transition duration-200 hover:text-[#FF6B1A]"
+        >
+          WATCHED FILMS
+        </Link>
 
         <Link
           to={isLoggedIn ? "/diary" : "/login"}

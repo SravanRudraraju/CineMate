@@ -1,14 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const MovieCard = ({ movie }) => {
+const MovieCard = ({ movie,className = ""}) => {
   return (
     <Link
       to={`/moviedetails/${movie.id}`}
-      className="group relative block aspect-[2/3] w-[180px]"
+      className={`group relative block aspect-[2/3] ${className} `}
     >
       {/* Hover title */}
-      <div className="pointer-events-none absolute bottom-full left-0 z-20 mb-3 w-full translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+      <div className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-3 w-max max-w-[240px] -translate-x-1/2 translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
         <div className="rounded-lg border border-white/[0.08] bg-[#0c0b12]/90 px-3 py-2.5 shadow-[0_12px_35px_rgba(0,0,0,0.5)] backdrop-blur-md">
           <div className="mb-2 h-[2px] w-8 rounded-full bg-[#E86A4A]" />
 

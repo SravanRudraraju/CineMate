@@ -9,6 +9,7 @@ import Search from './pages/Search'
 import Navbar from './components/Navbar'
 import Login from './pages/login'
 import Register from './pages/Register'
+import Watched from './pages/Watched'
 
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
           <Route path = "/moviedetails/:id" element={<MovieDeatils/>}/>
           <Route path = "/watchlist" element={<Watchlist/>}/>
           <Route path = "/diary" element={<Diary/>}/>
+          <Route path = "/watched" element={<Watched/>}/>
           <Route path = "/search" element={<Search/>}/>
           <Route path = "/login" element={<Login/>  } />
           <Route path='/register' element={<Register/>} />
