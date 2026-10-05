@@ -21,9 +21,28 @@ router.get("/", authMiddleware, async (req, res) => {
             message: "failed to fetch profile"
         })
     }
-
-
 })
 
+router.put("/edit",authMiddleware,async(req,res)=>{
+    try{
+        const userId = req.userId
+        const {name, bio, location,profile_image} = req.body
+        const result = await pool.query(`UPDATE users SET name = $1, bio = $2, location = $3, profile_image = $4 WHERE id = $5 RETURNING *`,[name,bio,location,profile_image,userId])
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                message: " profile not found"
+            })
+        }
+        res.status(200).json({
+            message: "profile updated successfully",
+            rating: result.rows[0]
+        })
+    }catch(error){
+        console.error(error)
+        res.status(500).json({
+            message: "failed to update profile"
+        })
+    }
+})
 
 export default router
