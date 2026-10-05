@@ -1,6 +1,7 @@
 import express from "express";
 import pool from "../db.js";
 import authMiddleware from "../middleware/authMiddleware.js";
+import { getMovieById } from "../services/tmdbService.js";
 
 const router = express.Router();
 
@@ -49,6 +50,7 @@ router.put("/favourites", authMiddleware, async (req, res) => {
     try {
         const userId = req.userId
         const { movies } = req.body
+
         if (!Array.isArray(movies) || movies.length > 5) {
             return res.status(400).json({
                 message: "Maximum 5 favourite movies allowed"
@@ -57,7 +59,11 @@ router.put("/favourites", authMiddleware, async (req, res) => {
 
         await pool.query(`DELETE FROM user_favourite_movies WHERE user_id = $1`, [userId])
         for (const movie of movies) {
-            await pool.query(`INSERT INTO user_favourite_movies (user_id, tmdb_movie_id, position) VALUES($1,$2,$3) RETURNING *`, [userId, movie.tmdb_movie_id, movie.position])
+            const Movie = await getMovieById(movie.tmdb_movie_id)
+            await pool.query(`INSERT INTO movies (tmdb_movie_id, title, poster_path, release_date) VALUES ($1, $2, $3, $4) ON CONFLICT (tmdb_movie_id) DO NOTHING`,
+                [Movie.id, Movie.title, Movie.poster_path, Movie.release_date])
+
+            await pool.query(`INSERT INTO user_favourite_movies (user_id, tmdb_movie_id, position) VALUES($1,$2,$3)`, [userId, movie.tmdb_movie_id, movie.position])
         }
         res.status(200).json({
             message: "favourite movies updated successfully",
