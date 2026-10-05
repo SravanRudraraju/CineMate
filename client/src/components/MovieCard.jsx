@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaStar, FaHeart } from "react-icons/fa";
 
-const MovieCard = ({ movie, className = "" }) => {
+const MovieCard = ({ movie, className = "",showMeta = true }) => {
   return (
     <Link
       to={`/moviedetails/${movie.id|| movie.tmdb_movie_id}`}
@@ -34,7 +34,7 @@ const MovieCard = ({ movie, className = "" }) => {
         <div className="pointer-events-none absolute inset-0 rounded-xl bg-black/0 transition-all duration-300 group-hover:bg-black/15" />
       </div>
 
-      <div className="mt-1 flex h-5 items-center gap-1">
+      {showMeta && (<div className="mt-1 flex h-5 items-center gap-1">
         {movie.rating ? (
           <div className="flex items-center gap-0">
             {[1, 2, 3, 4, 5].map((star) => {
@@ -62,11 +62,11 @@ const MovieCard = ({ movie, className = "" }) => {
           <div className="h-4" />
         )}
 
-        <FaHeart
+        {movie.liked && (<FaHeart
           className={`h-3.5 w-3.5 ${movie.liked ? "text-white/60" : ""
             }`}
-        />
-      </div>
+        />)}
+      </div>)}
     </Link>
 
   );

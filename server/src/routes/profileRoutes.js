@@ -14,7 +14,7 @@ router.get("/", authMiddleware, async (req, res) => {
         res.status(200).json({
             profile_data: profile_Data.rows[0],
             favourite_movies: fav_movies.rows,
-            recent_diary: recent_diary.rows
+            recent_movies: recent_diary.rows
         })
     } catch (error) {
         console.error(error)
