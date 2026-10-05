@@ -6,6 +6,13 @@ CREATE TABLE users (
     profile_image TEXT
 )
 
+ALTER TABLE users
+ADD COLUMN name VARCHAR(100),
+ADD COLUMN bio TEXT,
+ADD COLUMN location VARCHAR(100),
+ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+
 CREATE TABLE watchlist(
     user_id INTEGER NOT NULL,
     tmdb_movie_id INTEGER NOT NULL,

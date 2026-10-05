@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoutes.js"
 import movieRoutes from "./routes/movieRoutes.js"
 import diaryRoutes from "./routes/diaryRoutes.js";
 import collectionRoutes from "./routes/collectionRoutes.js"
+import profileRoutes from "./routes/profileRoutes.js"
 
 const app = express()
 const port = 3000
@@ -14,6 +15,7 @@ const port = 3000
 app.use(express.json())
 app.use(cors());
 
+app.use("/api/profile",profileRoutes)
 app.use("/api",collectionRoutes)
 app.use("/api/auth",authRoutes)
 app.use("/api/movies",movieRoutes)
