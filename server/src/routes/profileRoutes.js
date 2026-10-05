@@ -7,9 +7,13 @@ const router = express.Router();
 router.get("/", authMiddleware, async (req, res) => {
     try {
         const userId = req.userId
-        const result = await pool.query(`SELECT * FROM users WHERE id = $1`, [userId])
+        const profile_Data = await pool.query(`SELECT id,username,profile_image,name,bio,location,created_at FROM users WHERE id = $1`, [userId])
+        const fav_movies = await pool.query(`SELECT m.tmdb_movie_id, m.title, m.poster_path,m.release_date, f.position FROM user_favourite_movies f JOIN movies m ON m.tmdb_movie_id = f.tmdb_movie_id WHERE f.user_id = $1 ORDER BY f.position`,[userId])
+        const recent_diary = await pool.query(`SELECT d.id, d.tmdb_movie_id, d.watched_on, d.rating, d.liked, d.review, m.title, m.poster_path, m.release_date FROM diary_entries d  JOIN movies m ON m.tmdb_movie_id = d.tmdb_movie_id WHERE d.user_id = $1 ORDER BY d.watched_on DESC, d.id DESC LIMIT 5`,[userId])
         res.status(200).json({
-            profile : result.rows[0]
+            profile_data : profile_Data.rows[0],
+            favourite_movies : fav_movies.rows,
+            recent_diary : recent_diary.rows
         })
     } catch (error) {
         console.error(error)

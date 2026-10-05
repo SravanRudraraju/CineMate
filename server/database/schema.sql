@@ -71,3 +71,15 @@ CREATE TABLE movies (
     poster_path TEXT,
     release_date DATE
 );
+
+
+CREATE TABLE user_favourite_movies (
+    user_id INTEGER NOT NULL,
+    tmdb_movie_id INTEGER NOT NULL,
+    position INTEGER NOT NULL CHECK (position >= 1 AND position <= 5),
+    PRIMARY KEY (user_id, position),
+    UNIQUE (user_id, tmdb_movie_id),
+    FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+);
