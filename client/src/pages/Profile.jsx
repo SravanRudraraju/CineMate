@@ -4,6 +4,7 @@ import { useState } from 'react'
 import MovieCard from "../components/MovieCard"
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
+
 const Profile = () => {
   const navigate = useNavigate()
   const [profile, setProfile] = useState([])
@@ -32,124 +33,108 @@ const Profile = () => {
     fetchProfile()
   }, [])
   return (
-    <div className="min-h-screen px-8 pb-20 pt-8 text-white">
-      <div className="mx-auto max-w-[1350px]">
+   
 
-        {/* Profile Header */}
-        <section className="relative border-b border-white/[0.08] pb-12">
-          <div className="flex items-end justify-between">
+<div className="min-h-screen bg-[#151922] px-5 pb-20 pt-8 text-[#ece8df] sm:px-8">
+  <div className="mx-auto max-w-[1100px]">
 
-            <div className="flex items-center gap-7">
+    <header className="flex flex-col gap-7 border-b border-[#2b3140] pb-9 sm:flex-row sm:items-start sm:justify-between">
+      <div className="flex items-start gap-6">
+        <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-full bg-[#1d222d] ring-1 ring-[#353b4a] ring-offset-4 ring-offset-[#151922]">
+          {profile.profile_image && (
+            <img
+              src={profile.profile_image}
+              alt={`${profile.name}'s avatar`}
+              className="h-full w-full object-cover"
+            />
+          )}
+        </div>
 
-              {/* Profile Image */}
-              <div className="h-28 w-28 shrink-0 overflow-hidden rounded-full border border-white/10 bg-white/[0.06]">
-                <img
-                  src={profile.profile_image}
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
-              </div>
+        <div className="min-w-0 pt-1">
+          <h1 className="font-display text-4xl font-semibold tracking-tight text-white">
+            {profile.name}
+          </h1>
 
-              {/* Identity */}
-              <div>
-                <h1 className="text-4xl font-medium tracking-tight text-white">
-                  {profile.name}
-                </h1>
-
-                <p className="mt-1 text-sm text-white/40">
-                  {profile.username}
-                </p>
-
-                <p className="mt-5 max-w-xl text-[15px] leading-6 text-white/65">
-                  {profile.bio}
-                </p>
-
-                <div className="mt-4 flex items-center gap-5 text-xs text-white/35">
-                  <span>{profile.location}</span>
-                  <span className="h-1 w-1 rounded-full bg-white/20" />
-
-                </div>
-              </div>
-
+          <p className="mt-1.5 text-sm text-[#a2a7b4]">
+            @{profile.username}
+          </p>
+          {profile.location && (
+            <div className="mt-3 flex items-center gap-1.5 text-sm text-[#a2a7b4]">
+              
+              <span>📍 {profile.location}</span>
             </div>
+          )}
 
-            {/* Edit Button */}
-            <button className="rounded-full border border-white/10 px-5 py-2 text-xs tracking-wide text-white/55 transition hover:border-white/25 hover:text-white">
-              EDIT PROFILE
-            </button>
+          {profile.bio && (
+            <p className="mt-4 max-w-xl text-[15px] leading-7 text-[#ece8df]/85">
+              {profile.bio}
+            </p>
+          )}
 
-          </div>
-        </section>
-
-
-        {/* Favourite Movies */}
-        <section className="pt-12">
-
-          <div className="mb-7 flex items-center justify-between">
-            <div>
-              <p className="text-[11px] tracking-[0.25em] text-white/30">
-                PERSONAL COLLECTION
-              </p>
-
-              <h2 className="mt-2 text-2xl font-medium text-white/90">
-                Favourite films
-              </h2>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-5 gap-7">
-            {/* Favourite Movie */}
-            {favourites.map((movie) => (
-              <MovieCard
-                key={movie.tmdb_movie_id}
-                movie={{
-                  id: movie.tmdb_movie_id,
-                  title: movie.title,
-                  poster_path: movie.poster_path,
-                  release_date: movie.release_date,
-                }}
-                className="w-[180px]"
-                showMeta={false}
-              />
-            ))}
-          </div>
-        </section>
-
-
-        {/* Recent Diary */}
-        <section className="mt-20">
-
-          <div className="mb-7 flex items-end justify-between border-b border-white/[0.08] pb-4">
-            <div>
-              <p className="text-[11px] tracking-[0.25em] text-white/30">
-                CINEMA JOURNAL
-              </p>
-
-              <h2 className="mt-2 text-2xl font-medium text-white/90">
-                Recently watched
-              </h2>
-            </div>
-
-            <button className="text-xs tracking-wide text-white/35 transition hover:text-white/70" onClick={() => navigate("/diary")} >
-              SEE DIARY →
-            </button>
-          </div>
-
-
-          {/* Diary Entry */}
-          <div className="grid grid-cols-5 gap-7">
-            {recentMovies.map((movie) => (
-              <MovieCard
-                key={movie.tmdb_movie_id}
-                movie={movie}
-                className="w-[180px]"
-              />
-            ))}
-          </div>
-        </section>
-
+          
+        </div>
       </div>
-    </div>
+
+      <button
+        className="self-start rounded-full border border-[#363c4b] px-5 py-2 text-sm font-medium text-[#ece8df]/85 transition duration-200 hover:border-[#e9b44c] hover:bg-[#e9b44c]/5 hover:text-[#e9b44c] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e9b44c]"
+      >
+        Edit profile
+      </button>
+    </header>
+
+    <section className="mt-11">
+      <div className="mb-5 flex items-center gap-3">
+        <span className="h-5 w-1 rounded-full bg-[#e9b44c]" />
+
+        <h2 className="font-display text-2xl font-medium text-white">
+          Favourite films
+        </h2>
+      </div>
+
+      <div className="flex flex-wrap gap-4 sm:gap-6">
+        {favourites.map((movie) => (
+          <MovieCard
+            key={movie.tmdb_movie_id}
+            movie={{
+              id: movie.tmdb_movie_id,
+              title: movie.title,
+              poster_path: movie.poster_path,
+              release_date: movie.release_date,
+            }}
+            className="w-[110px] sm:w-[160px]"
+            showMeta={false}
+          />
+        ))}
+      </div>
+    </section>
+
+    <section className="mt-14">
+      <div className="mb-5 flex items-center justify-between border-b border-[#2b3140] pb-3">
+        <h2 className="font-display text-xl font-medium text-white">
+          Recently watched
+        </h2>
+
+        <button
+          onClick={() => navigate("/diary")}
+          className="text-sm font-medium text-[#a2a7b4] transition duration-200 hover:text-[#e9b44c]"
+        >
+          Open diary →
+        </button>
+      </div>
+
+      <div className="grid grid-cols-3 gap-x-3 gap-y-7 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
+        {recentMovies.map((movie) => (
+          <MovieCard
+            key={movie.tmdb_movie_id}
+            movie={movie}
+            className="w-full"
+          />
+        ))}
+      </div>
+    </section>
+
+  </div>
+</div>
   )
 }
 
