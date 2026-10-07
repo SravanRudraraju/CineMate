@@ -24,7 +24,7 @@ router.get("/", authMiddleware, async (req, res) => {
     }
 })
 
-router.put("/edit", authMiddleware, async (req, res) => {
+router.put("/", authMiddleware, async (req, res) => {
     try {
         const userId = req.userId
         const { name, bio, location, profile_image } = req.body
