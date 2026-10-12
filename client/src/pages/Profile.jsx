@@ -131,7 +131,7 @@ const Profile = () => {
     }
   }
 
-  
+
   const handleFavouriteSelect = (movie) => {
     const movieId = movie.id ?? movie.tmdb_movie_id;
 
@@ -242,7 +242,7 @@ const Profile = () => {
           </div>
 
           <button onClick={handleEditProfile}
-            className="self-start rounded-full border border-[#363c4b] px-5 py-2 text-sm font-medium text-[#ece8df]/85 transition duration-200 hover:border-[#e9b44c] hover:bg-[#e9b44c]/5 hover:text-[#e9b44c] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e9b44c]"
+            className="self-start rounded-full border border-[#363c4b] px-5 py-2 text-sm font-medium text-[#ece8df]/85 transition duration-200 hover:border-[#e9b44c] hover:bg-[#e9b44c]/5 hover:text-[#e9b44c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e9b44c]"
           >
             Edit profile
           </button>
@@ -300,154 +300,286 @@ const Profile = () => {
         </section>
 
       </div>
+
+
       {showEditProfile && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-5 backdrop-blur-sm">
-          <div className="w-full max-w-[520px] rounded-2xl border border-[#343a49] bg-[#1b202b] p-7 shadow-[0_25px_80px_rgba(0,0,0,0.5)]">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-[#0b0e14]/85 p-3 backdrop-blur-md sm:p-6 lg:p-8">
+          <div className="mx-auto flex min-h-full w-full max-w-5xl items-center justify-center">
+            <div className="w-full overflow-hidden rounded-2xl border border-[#3a4151] bg-[#151922] shadow-[0_30px_100px_rgba(0,0,0,0.6)]">
 
-            <div className="mb-7 flex items-center justify-between">
-              <h2 className="font-display text-2xl font-medium text-white">
-                Edit profile
-              </h2>
-
-              <button onClick={() => setShowEditProfile(false)}
-                className="flex h-9 w-9 items-center justify-center rounded-full text-xl text-[#a2a7b4] transition hover:bg-white/5 hover:text-white"
-              >
-                ×
-              </button>
-            </div>
-
-            <div className="space-y-5">
-
-              <div>
-                <label className="mb-2 block text-sm font-medium text-white">
-                  name
-                </label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded-lg border border-[#343a49] bg-[#151922] px-4 py-3 text-sm text-white outline-none transition placeholder:text-[#777d8c] focus:border-[#e9b44c]"
-                />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium text-white">
-                  Bio
-                </label>
-                <textarea
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  rows="3"
-                  className="w-full resize-none rounded-lg border border-[#343a49] bg-[#151922] px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-[#777d8c] focus:border-[#e9b44c]"
-                />
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium text-white">
-                  Location
-                </label>
-                <input
-                  type="text"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="w-full rounded-lg border border-[#343a49] bg-[#151922] px-4 py-3 text-sm text-white outline-none transition placeholder:text-[#777d8c] focus:border-[#e9b44c]"
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-white">
-                  Profile picture
-                </label>
-
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setSelectedImage(e.target.files[0])}
-                />
-                {selectedImage && (
-                  <p className="mt-2 text-sm text-white">
-                    {selectedImage.name}
+              {/* Header */}
+              <div className="flex items-center justify-between border-b border-[#343a49] px-5 py-5 sm:px-8 sm:py-6">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#e9b44c]">
+                    CineMate
                   </p>
-                )}
+                  <h2 className="mt-1 font-display text-2xl font-semibold text-white sm:text-3xl">
+                    Edit profile
+                  </h2>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowEditProfile(false)}
+                  aria-label="Close edit profile"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[#454c5d] text-2xl text-[#d1d5df] transition hover:border-[#e9b44c] hover:bg-[#252b38] hover:text-white"
+                >
+                  ×
+                </button>
               </div>
 
-              <div className="mt-6">
-                <h3 className="mb-3 text-sm font-medium text-white">
-                  Favourite films
-                </h3>
+              {/* Form content */}
+              <div className="space-y-9 p-5 sm:p-8">
 
-                <div className="grid grid-cols-5 gap-3">
-                  {favouriteMovies.map((movie, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      onClick={() => setActiveFavouriteSlot(index)}
-                      className={`flex aspect-[3/4] min-w-0 flex-col items-center justify-center rounded-lg border p-3 text-center transition ${activeFavouriteSlot === index
-                        ? "border-[#e9b44c] bg-[#292f3d]"
-                        : "border-dashed border-[#454c5d] bg-[#1d222d] hover:border-[#e9b44c]"
-                        }`}
-                    >
-                      {movie ? (
-                        <>
-                          <span className="line-clamp-2 text-xs font-medium text-white">
-                            {movie.title}
-                          </span>
-                          <span className="mt-1 text-xs text-[#a2a7b4]">
-                            {movie.release_date?.slice(0, 4)}
-                          </span>
-                          <span className="mt-2 text-[10px] text-[#e9b44c]">
-                            Change film
-                          </span>
-                        </>
+                {/* Profile picture */}
+                <section>
+                  <label className="mb-4 block text-lg font-semibold text-white">
+                    Profile picture
+                  </label>
+
+                  <div className="flex flex-col gap-5 rounded-xl border border-[#343a49] bg-[#1b202b] p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-6">
+                    <label className="group relative flex h-28 w-28 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-[#454c5d] bg-[#252b38] transition hover:border-[#e9b44c]">
+                      {selectedImage ? (
+                        <img
+                          src={URL.createObjectURL(selectedImage)}
+                          alt="Selected profile preview"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : profileImage ? (
+                        <img
+                          src={profileImage}
+                          alt="Current profile picture"
+                          className="h-full w-full object-cover"
+                        />
                       ) : (
-                        <>
-                          <span className="text-2xl text-[#e9b44c]">+</span>
-                          <span className="mt-2 text-xs text-[#a2a7b4]">
-                            Choose film
-                          </span>
-                        </>
+                        <span className="font-display text-4xl font-semibold text-[#e9b44c]">
+                          {(name || profile.username || "?")
+                            .charAt(0)
+                            .toUpperCase()}
+                        </span>
                       )}
-                    </button>
-                  ))}
-                </div>
-                {activeFavouriteSlot !== null && (
-                  <div className="mt-5 rounded-lg border border-[#353b4a] bg-[#1d222d] p-4">
-                    <div className="mb-3 flex items-center justify-between gap-3">
-                      <h4 className="text-sm font-medium text-white">
-                        Choose a film {activeFavouriteSlot + 1}
-                      </h4>
 
-                      <button
-                        type="button"
-                        onClick={() => setActiveFavouriteSlot(null)}
-                        className="text-sm text-[#a2a7b4] hover:text-white"
-                      >
-                        Close
-                      </button>
+                      <span className="absolute inset-0 flex items-center justify-center bg-black/55 opacity-0 transition group-hover:opacity-100">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          className="h-7 w-7 text-white"
+                          aria-hidden="true"
+                        >
+                          <path d="M14 4h-4L8 7H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2-3Z" />
+                          <circle cx="12" cy="13" r="3.5" />
+                        </svg>
+                      </span>
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="sr-only"
+                        onChange={(e) =>
+                          setSelectedImage(e.target.files?.[0] || null)
+                        }
+                      />
+                    </label>
+
+                    <div className="min-w-0 flex-1">
+                      <p className="text-base font-semibold text-white">
+                        {selectedImage ? "Photo selected" : "Choose your profile photo"}
+                      </p>
+
+                      <p className="mt-1 text-sm text-[#b5bac7]">
+                        {selectedImage
+                          ? selectedImage.name
+                          : ""}
+                      </p>
+
+                      <label className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#555d6f] px-4 py-2.5 text-sm font-medium text-white transition hover:border-[#e9b44c] hover:bg-[#252b38]">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          className="h-4 w-4"
+                          aria-hidden="true"
+                        >
+                          <path d="M12 16V4m-4 4 4-4 4 4" />
+                          <path d="M5 14v5h14v-5" />
+                        </svg>
+                        {selectedImage ? "Choose another photo" : "Upload photo"}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="sr-only"
+                          onChange={(e) =>
+                            setSelectedImage(e.target.files?.[0] || null)
+                          }
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Personal information */}
+                <section>
+
+
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-2 block text-lg font-semibold text-[#ece8df]">
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Your name"
+                        className="w-full rounded-lg border border-[#454c5d] bg-[#1b202b] px-4 py-3.5 text-base text-white outline-none transition placeholder:text-[#9299a8] focus:border-[#e9b44c] focus:ring-1 focus:ring-[#e9b44c]/30"
+                      />
                     </div>
 
-                    <MoviePicker onSelect={handleFavouriteSelect} />
+                    <div>
+                      <label className="mb-2 block text-lg font-semibold text-[#ece8df]">
+                        Location
+                      </label>
+                      <input
+                        type="text"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        placeholder="City, country"
+                        className="w-full rounded-lg border border-[#454c5d] bg-[#1b202b] px-4 py-3.5 text-base text-white outline-none transition placeholder:text-[#9299a8] focus:border-[#e9b44c] focus:ring-1 focus:ring-[#e9b44c]/30"
+                      />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className="mb-2 block text-lg font-semibold text-[#ece8df]">
+                        Bio
+                      </label>
+                      <textarea
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
+                        rows={3}
+                        placeholder="A little about you..."
+                        className="w-full resize-y rounded-lg border border-[#454c5d] bg-[#1b202b] px-4 py-3.5 text-base leading-6 text-white outline-none transition placeholder:text-[#9299a8] focus:border-[#e9b44c] focus:ring-1 focus:ring-[#e9b44c]/30"
+                      />
+                    </div>
                   </div>
-                )}
+                </section>
+
+                {/* Favourite films */}
+                <section>
+                  <div className="mb-5 border-b border-[#343a49] pb-3">
+                    <h3 className="text-lg font-semibold text-white">
+                      Favourite films
+                    </h3>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
+                    {favouriteMovies.map((movie, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => setActiveFavouriteSlot(index)}
+                        aria-label={
+                          movie
+                            ? `Replace ${movie.title}`
+                            : "Choose a favourite film"
+                        }
+                        className={`group min-w-0 overflow-hidden rounded-xl border text-left transition ${activeFavouriteSlot === index
+                          ? "border-[#e9b44c] ring-2 ring-[#e9b44c]/30"
+                          : "border-[#343a49] hover:border-[#e9b44c]"
+                          }`}
+                      >
+                        <div className="relative aspect-[2/3] overflow-hidden bg-[#202633]">
+                          {movie?.poster_path ? (
+                            <img
+                              src={
+                                movie.poster_path.startsWith("http")
+                                  ? movie.poster_path
+                                  : `https://image.tmdb.org/t/p/w342${movie.poster_path}`
+                              }
+                              alt={movie.title}
+                              className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                            />
+                          ) : (
+                            <div className="flex h-full flex-col items-center justify-center gap-2 text-[#e9b44c]">
+                              <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                                className="h-8 w-8"
+                                aria-hidden="true"
+                              >
+                                <path d="M12 5v14M5 12h14" />
+                              </svg>
+                              <span className="text-sm font-medium text-[#d1d5df]">
+                                Add film
+                              </span>
+                            </div>
+                          )}
+
+                          {movie && (
+                            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent px-3 pb-3 pt-12">
+                              <p className="line-clamp-2 text-sm font-semibold leading-5 text-white">
+                                {movie.title}
+                              </p>
+                              <p className="mt-1 text-xs text-[#d1d5df]">
+                                {movie.release_date?.slice(0, 4) || "Year unknown"}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {activeFavouriteSlot !== null && (
+                    <div className="mt-5 rounded-xl border border-[#343a49] bg-[#1b202b] p-4 sm:p-5">
+                      <div className="mb-4 flex items-center justify-between">
+                        <h4 className="text-sm font-semibold text-white">
+                          Select a film to change
+                        </h4>
+
+                        <button
+                          type="button"
+                          onClick={() => setActiveFavouriteSlot(null)}
+                          className="text-sm font-medium text-[#d1d5df] transition hover:text-[#e9b44c]"
+                        >
+                          Close
+                        </button>
+                      </div>
+
+                      <MoviePicker onSelect={handleFavouriteSelect} />
+                    </div>
+                  )}
+                </section>
               </div>
+
+              {/* Footer */}
+              <div className="flex items-center justify-end gap-3 border-t border-[#343a49] bg-[#1b202b] px-5 py-5 sm:px-8">
+                <button
+                  type="button"
+                  onClick={() => setShowEditProfile(false)}
+                  className="rounded-full px-5 py-3 text-sm font-semibold text-[#d1d5df] transition hover:bg-white/5 hover:text-white"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSaveProfile}
+                  className="rounded-full bg-[#e9b44c] px-7 py-3 text-sm font-bold text-[#151922] shadow-md shadow-[#e9b44c]/10 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f5c96b] hover:shadow-lg hover:shadow-[#e9b44c]/20 active:translate-y-0 active:scale-[0.97] active:bg-[#d9a53c] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e9b44c] disabled:pointer-events-none disabled:opacity-50"
+                >
+                  Save changes
+                </button>
+              </div>
+
             </div>
-
-
           </div>
-
-          <div className="mt-8 flex items-center justify-end gap-3 border-t border-[#2b3140] pt-5">
-
-            <button
-              onClick={handleSaveProfile}
-              className="rounded-full bg-[#e9b44c] px-6 py-2.5 text-sm font-semibold text-[#151922] transition hover:bg-[#f0c15d]"
-            >
-              Save changes
-            </button>
-          </div>
-
         </div>
+      )}
 
-      )
-      }
     </div >
   )
 }
