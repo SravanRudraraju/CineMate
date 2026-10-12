@@ -46,6 +46,46 @@ app.get("/api/movies/search", async(req,res)=>{
 })
 
 
+app.get("/api/movies/picker-search", async (req, res) => {
+  const { query } = req.query;
+
+  if (!query || !query.trim()) {
+    return res.json({ results: [] });
+  }
+
+  try {
+    const data = await searchMovie(query);
+    const movies = data.results.slice(0, 5);
+
+    const results = await Promise.all(
+      movies.map(async (movie) => {
+        const details = await getMovieById(movie.id);
+
+        const director = details.credits?.crew?.find(
+          (member) => member.job === "Director"
+        );
+
+        return {
+          id: movie.id,
+          title: movie.title,
+          release_date: movie.release_date,
+          poster_path: movie.poster_path,
+          director: director?.name || ""
+        };
+      })
+    );
+
+    res.json({ results });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Failed to search movies for picker"
+    });
+  }
+});
+
+
+
 
 app.get("/api/movies/:id", async(req,res)=>{
     const {id} = req.params

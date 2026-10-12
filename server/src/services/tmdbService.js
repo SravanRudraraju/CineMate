@@ -30,7 +30,7 @@ export const getTrendingMovies = async()=>{
 
 export const searchMovie = async(query) =>{
     const response = await fetch(
-        `https://api.themoviedb.org/3/search/movie?query=${query}`,
+        `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}`,
         {
             headers:{
                     Authorization : `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,

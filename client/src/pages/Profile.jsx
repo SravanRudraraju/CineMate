@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import MovieCard from "../components/MovieCard"
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import MoviePicker from '../components/MoviePicker';
 
 
 const Profile = () => {
@@ -20,39 +21,141 @@ const Profile = () => {
 
   const [selectedImage, setSelectedImage] = useState(null)
 
+  const [favouriteMovies, setFavouriteMovies] = useState(
+    Array(5).fill(null)
+  );
+  const [activeFavouriteSlot, setActiveFavouriteSlot] = useState(null);
+
   const handleEditProfile = () => {
     setName(profile.name || "")
     setBio(profile.bio || "")
     setLocation(profile.location || "")
     setProfileImage(profile.profile_image || "")
+
+    const slots = Array(5).fill(null);
+
+    favourites.forEach((movie) => {
+      const position = movie.position - 1;
+
+      if (position >= 0 && position < 5) {
+        slots[position] = {
+          id: movie.tmdb_movie_id,
+          tmdb_movie_id: movie.tmdb_movie_id,
+          title: movie.title,
+          release_date: movie.release_date,
+          poster_path: movie.poster_path,
+        };
+      }
+    });
+    setFavouriteMovies(slots);
+    setActiveFavouriteSlot(null);
     setShowEditProfile(true)
   }
+
+
 
   const handleSaveProfile = async () => {
     const token = localStorage.getItem("token")
     const imageUrl = selectedImage ? await uploadImage() : profileImage
-    
-    const response = await fetch(`http://localhost:3000/api/profile`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "Application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        name, bio, location, profile_image: imageUrl
+    if (selectedImage && !imageUrl) {
+      alert("Image upload failed. Please try again.");
+      return;
+    }
+
+    try {
+      const profileResponse = await fetch(`http://localhost:3000/api/profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "Application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          name, bio, location, profile_image: imageUrl
+        })
       })
-    })
-    const data = await response.json()
-    if (response.ok) {
+      const profileData = await profileResponse.json()
+      if (!profileResponse.ok) {
+        alert(profileData.message || "Failed to update profile.")
+        return
+      }
       setProfile({
         ...profile,
         name, bio, location, profile_image: imageUrl
       })
-      setShowEditProfile(false)
-    } else {
-      alert(data.message)
+      const moviesToSave = favouriteMovies.flatMap(
+        (movie, index) =>
+          movie
+            ? [{
+              tmdb_movie_id: movie.id ?? movie.tmdb_movie_id,
+              position: index + 1,
+            }] : []
+      )
+      const favouritesResponse = await fetch(
+        "http://localhost:3000/api/profile/favourites",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            movies: moviesToSave,
+          })
+        }
+      )
+      const favouritesData = await favouritesResponse.json()
+      if (!favouritesResponse.ok) {
+        alert(
+          favouritesData.message ||
+          "Profile updated, but favourite films could not be saved."
+        )
+        return
+      }
+      setFavourites(
+        favouriteMovies.flatMap((movie, index) =>
+          movie
+            ? [{
+              tmdb_movie_id: movie.id ?? movie.tmdb_movie_id,
+              title: movie.title,
+              poster_path: movie.poster_path,
+              release_date: movie.release_date,
+              position: index + 1,
+            }]
+            : []
+        )
+      )
+      setShowEditProfile(false);
+    } catch (error) {
+      console.error("Failed to save profile:", error);
+      alert("Something went wrong. Please try again.");
     }
   }
+
+  
+  const handleFavouriteSelect = (movie) => {
+    const movieId = movie.id ?? movie.tmdb_movie_id;
+
+    const alreadySelected = favouriteMovies.some(
+      (item, index) =>
+        index !== activeFavouriteSlot &&
+        (item?.id ?? item?.tmdb_movie_id) === movieId
+    );
+
+    if (alreadySelected) {
+      alert("This movie is already selected in another slot.");
+      return;
+    }
+
+    setFavouriteMovies((current) =>
+      current.map((item, index) =>
+        index === activeFavouriteSlot
+          ? { ...movie, id: movieId, tmdb_movie_id: movieId }
+          : item
+      )
+    );
+
+    setActiveFavouriteSlot(null);
+  };
 
   const uploadImage = async () => {
     if (!selectedImage) return null
@@ -267,22 +370,85 @@ const Profile = () => {
                 )}
               </div>
 
+              <div className="mt-6">
+                <h3 className="mb-3 text-sm font-medium text-white">
+                  Favourite films
+                </h3>
+
+                <div className="grid grid-cols-5 gap-3">
+                  {favouriteMovies.map((movie, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => setActiveFavouriteSlot(index)}
+                      className={`flex aspect-[3/4] min-w-0 flex-col items-center justify-center rounded-lg border p-3 text-center transition ${activeFavouriteSlot === index
+                        ? "border-[#e9b44c] bg-[#292f3d]"
+                        : "border-dashed border-[#454c5d] bg-[#1d222d] hover:border-[#e9b44c]"
+                        }`}
+                    >
+                      {movie ? (
+                        <>
+                          <span className="line-clamp-2 text-xs font-medium text-white">
+                            {movie.title}
+                          </span>
+                          <span className="mt-1 text-xs text-[#a2a7b4]">
+                            {movie.release_date?.slice(0, 4)}
+                          </span>
+                          <span className="mt-2 text-[10px] text-[#e9b44c]">
+                            Change film
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-2xl text-[#e9b44c]">+</span>
+                          <span className="mt-2 text-xs text-[#a2a7b4]">
+                            Choose film
+                          </span>
+                        </>
+                      )}
+                    </button>
+                  ))}
+                </div>
+                {activeFavouriteSlot !== null && (
+                  <div className="mt-5 rounded-lg border border-[#353b4a] bg-[#1d222d] p-4">
+                    <div className="mb-3 flex items-center justify-between gap-3">
+                      <h4 className="text-sm font-medium text-white">
+                        Choose a film {activeFavouriteSlot + 1}
+                      </h4>
+
+                      <button
+                        type="button"
+                        onClick={() => setActiveFavouriteSlot(null)}
+                        className="text-sm text-[#a2a7b4] hover:text-white"
+                      >
+                        Close
+                      </button>
+                    </div>
+
+                    <MoviePicker onSelect={handleFavouriteSelect} />
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="mt-8 flex items-center justify-end gap-3 border-t border-[#2b3140] pt-5">
-
-              <button
-                onClick={handleSaveProfile}
-                className="rounded-full bg-[#e9b44c] px-6 py-2.5 text-sm font-semibold text-[#151922] transition hover:bg-[#f0c15d]"
-              >
-                Save changes
-              </button>
-            </div>
 
           </div>
+
+          <div className="mt-8 flex items-center justify-end gap-3 border-t border-[#2b3140] pt-5">
+
+            <button
+              onClick={handleSaveProfile}
+              className="rounded-full bg-[#e9b44c] px-6 py-2.5 text-sm font-semibold text-[#151922] transition hover:bg-[#f0c15d]"
+            >
+              Save changes
+            </button>
+          </div>
+
         </div>
-      )}
-    </div>
+
+      )
+      }
+    </div >
   )
 }
 
