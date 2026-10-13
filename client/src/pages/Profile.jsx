@@ -550,7 +550,7 @@ const Profile = () => {
                         </button>
                       </div>
 
-                      <MoviePicker onSelect={handleFavouriteSelect} />
+                      <MoviePicker onSelect={handleFavouriteSelect} onClose={() => setActiveFavouriteSlot(null)} />
                     </div>
                   )}
                 </section>

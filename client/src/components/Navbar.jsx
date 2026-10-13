@@ -4,7 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useState } from "react";
 
 
-const Navbar = () => {
+const Navbar = ({onLogFilm}) => {
   const [query, setQuery] = useState("")
   const navigate = useNavigate()
   const location = useLocation();
@@ -84,6 +84,10 @@ const Navbar = () => {
           >
             PROFILE
           </Link>
+          <button onClick={onLogFilm}
+          className="text-base font-medium tracking-wide text-white/80 transition duration-200 hover:text-[#FF6B1A]">
+            LOG A FILM
+          </button>
 
           <button
             onClick={() => {

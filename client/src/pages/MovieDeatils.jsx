@@ -351,7 +351,6 @@ const MovieDeatils = () => {
     } else {
       const data = await response.json()
       alert(data.message)
-      
     }
   }
 
