@@ -1,10 +1,11 @@
 import React from 'react'
 import MovieCard from '../components/MovieCard'
-import { useState,useEffect } from 'react'
+import { useState, useEffect } from 'react'
 const LikedMovies = () => {
     const [likedMovies, setLikedMovies] = useState([])
-        useEffect(() => {
-            const fetchLikedMovies = async () => {
+    useEffect(() => {
+        const fetchLikedMovies = async () => {
+            try {
                 const token = localStorage.getItem("token")
                 const response = await fetch(`http://localhost:3000/api/liked/movies`,
                     {
@@ -19,10 +20,14 @@ const LikedMovies = () => {
                 } else {
                     alert(data.message)
                 }
+            } catch (error) {
+                console.error("Error fetching liked movies:", error)
+                alert("Something went wrong. Please try again.")
             }
-            fetchLikedMovies()
-        }, [])
-  return (
+        }
+        fetchLikedMovies()
+    }, [])
+    return (
         <div className="min-h-screen px-8 pb-16 pt-10">
             {/* Header */}
             <div className="mx-auto max-w-7xl">

@@ -7,20 +7,25 @@ const Watched = () => {
     const [movies, setMovies] = useState([])
     useEffect(() => {
         const fetchMovies = async () => {
-            const token = localStorage.getItem("token")
+            try {
+                const token = localStorage.getItem("token")
 
-            const response = await fetch(`http://localhost:3000/api/watched`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
+                const response = await fetch(`http://localhost:3000/api/watched`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
                     }
+                )
+                const data = await response.json()
+                if (response.ok) {
+                    setMovies(data.watched_movies)
+                } else {
+                    alert(data.message)
                 }
-            )
-            const data = await response.json()
-            if (response.ok) {
-                setMovies(data.watched_movies)
-            } else {
-                alert(data.message)
+            } catch (error) {
+                console.error("Error fetching watched movies:", error)
+                alert("Something went wrong. Please try again.")
             }
         }
         fetchMovies()

@@ -4,7 +4,7 @@ const MoviePicker = ({ onSelect, onClose }) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!query.trim()) {
@@ -15,16 +15,22 @@ const MoviePicker = ({ onSelect, onClose }) => {
     const timer = setTimeout(async () => {
       try {
         setLoading(true);
+        setError("")
 
         const response = await fetch(
           `http://localhost:3000/api/movies/picker-search?query=${encodeURIComponent(query)}`
         );
+        if (!response.ok) {
+          throw new Error("Failed to search movies. Please try again.");
+        }
+
 
         const data = await response.json();
         setResults(data.results || []);
       } catch (error) {
         console.error("Failed to search movies:", error);
         setResults([]);
+        setError(error.message || "Something went wrong. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -70,7 +76,13 @@ const MoviePicker = ({ onSelect, onClose }) => {
               </p>
             )}
 
-            {!loading && results.length === 0 && (
+            {!loading && error && (
+              <p className="px-4 py-3 text-sm text-red-400">
+                {error}
+              </p>
+            )}
+
+            {!loading && !error && results.length === 0 && (
               <p className="px-4 py-3 text-sm text-[#a2a7b4]">
                 No movies found.
               </p>
@@ -81,7 +93,7 @@ const MoviePicker = ({ onSelect, onClose }) => {
                 <button
                   key={movie.id}
                   type="button"
-                  onClick={() =>onSelect(movie)}
+                  onClick={() => onSelect(movie)}
                   className="block w-full border-b border-[#353b4a] px-4 py-3 text-left last:border-b-0 hover:bg-[#292f3d]"
                 >
                   <span className="block text-sm font-medium text-white">

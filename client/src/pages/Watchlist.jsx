@@ -7,17 +7,24 @@ const Watchlist = () => {
   const [watchlist, setWatchlist] = useState([])
   useEffect(() => {
     const fetchWatchlist = async () => {
-      const token = localStorage.getItem("token")
-      const response = await fetch(`http://localhost:3000/api/watchlist`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      try {
+
+
+        const token = localStorage.getItem("token")
+        const response = await fetch(`http://localhost:3000/api/watchlist`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        const data = await response.json()
+        if (response.ok) {
+          setWatchlist(data.watchlist)
+        } else {
+          alert(data.message)
         }
-      })
-      const data = await response.json()
-      if (response.ok) {
-        setWatchlist(data.watchlist)
-      } else {
-        alert(data.message)
+      } catch (error) {
+        console.error("Error fetching watchlist:", error)
+        alert("Something went wrong. Please try again.")
       }
     }
     fetchWatchlist()
@@ -45,7 +52,7 @@ const Watchlist = () => {
             {watchlist.map((movie, index) => (
               <div
                 key={movie.tmdb_movie_id}
-                
+
               >
                 <MovieCard
                   movie={movie}

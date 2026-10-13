@@ -10,19 +10,24 @@ const Diary = () => {
 
   useEffect(() => {
     const fetchDiary = async () => {
-      const token = localStorage.getItem("token")
+      try {
+        const token = localStorage.getItem("token")
 
-      const response = await fetch("http://localhost:3000/api/diary", {
-        headers: {
-          Authorization: `Bearer ${token}`
+        const response = await fetch("http://localhost:3000/api/diary", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        const data = await response.json()
+        if (response.ok) {
+          setDiary(data.diary)
+
+        } else {
+          alert(data.message)
         }
-      })
-      const data = await response.json()
-      if (response.ok) {
-        setDiary(data.diary)
-
-      } else {
-        alert(data.message)
+      } catch (error) {
+        console.error("Error fetching diary:", error)
+        alert("Something went wrong. Please try again.")
       }
     }
     fetchDiary()
