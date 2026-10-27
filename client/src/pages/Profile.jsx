@@ -56,13 +56,14 @@ const Profile = () => {
 
   const handleSaveProfile = async () => {
     const token = localStorage.getItem("token")
-    const imageUrl = selectedImage ? await uploadImage() : profileImage
-    if (selectedImage && !imageUrl) {
-      alert("Image upload failed. Please try again.");
-      return;
-    }
+
 
     try {
+      const imageUrl = selectedImage ? await uploadImage() : profileImage
+      if (selectedImage && !imageUrl) {
+        alert("Image upload failed. Please try again.");
+        return;
+      }
       const profileResponse = await fetch(`http://localhost:3000/api/profile`, {
         method: "PUT",
         headers: {
@@ -159,41 +160,55 @@ const Profile = () => {
 
   const uploadImage = async () => {
     if (!selectedImage) return null
-    const formData = new FormData()
-    formData.append("file", selectedImage)
-    formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET)
+    try {
 
-    const response = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
-      {
-        method: "POST",
-        body: formData
+      const formData = new FormData()
+      formData.append("file", selectedImage)
+      formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET)
+
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData
+        }
+      )
+      const data = await response.json()
+
+      if (!response.ok) {
+        console.log(data)
+        return null
       }
-    )
-    const data = await response.json()
-
-    if (!response.ok) {
-      console.log(data)
+      return data.secure_url
+    } catch (error) {
+      console.error("Image upload error:", error)
       return null
     }
-    return data.secure_url
   }
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const token = localStorage.getItem("token")
-      const response = await fetch(`http://localhost:3000/api/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      try {
+
+
+        const token = localStorage.getItem("token")
+        const response = await fetch(`http://localhost:3000/api/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        const data = await response.json()
+        if (response.ok) {
+          setProfile(data.profile_data)
+          setFavourites(data.favourite_movies)
+          setRecentMovies(data.recent_movies)
         }
-      })
-      const data = await response.json()
-      if (response.ok) {
-        setProfile(data.profile_data)
-        setFavourites(data.favourite_movies)
-        setRecentMovies(data.recent_movies)
+        else {
+          alert(data.message || "Failed to load profile")
+        }
       }
-      else {
-        alert(data.message)
+      catch (error) {
+        console.error("Failed to fetch profile:", error)
+        alert("Unable to load your profile. Please try again.")
       }
     }
     fetchProfile()

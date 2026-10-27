@@ -46,35 +46,122 @@ router.put("/", authMiddleware, async (req, res) => {
     }
 })
 
-router.put("/favourites", authMiddleware, async (req, res) => {
-    try {
-        const userId = req.userId
-        const { movies } = req.body
 
+router.put("/favourites", authMiddleware, async (req, res) => {
+    let client;
+
+    try {
+        const userId = req.userId;
+        const { movies } = req.body;
+
+        // Validate the request
         if (!Array.isArray(movies) || movies.length > 5) {
             return res.status(400).json({
-                message: "Maximum 5 favourite movies allowed"
+                message: "Maximum 5 favourite movies allowed."
             });
         }
 
-        await pool.query(`DELETE FROM user_favourite_movies WHERE user_id = $1`, [userId])
+        // Validate movie IDs and positions
+        const positions = new Set();
+        const movieIds = new Set();
+
         for (const movie of movies) {
-            const Movie = await getMovieById(movie.tmdb_movie_id)
-            await pool.query(`INSERT INTO movies (tmdb_movie_id, title, poster_path, release_date) VALUES ($1, $2, $3, $4) ON CONFLICT (tmdb_movie_id) DO NOTHING`,
-                [Movie.id, Movie.title, Movie.poster_path, Movie.release_date])
+            if (
+                !movie ||
+                !Number.isInteger(Number(movie.tmdb_movie_id)) ||
+                Number(movie.tmdb_movie_id) <= 0 ||
+                !Number.isInteger(Number(movie.position)) ||
+                Number(movie.position) < 1 ||
+                Number(movie.position) > 5 ||
+                positions.has(Number(movie.position)) ||
+                movieIds.has(Number(movie.tmdb_movie_id))
+            ) {
+                return res.status(400).json({
+                    message: "Invalid or duplicate favourite movie selection."
+                });
+            }
 
-            await pool.query(`INSERT INTO user_favourite_movies (user_id, tmdb_movie_id, position) VALUES($1,$2,$3)`, [userId, movie.tmdb_movie_id, movie.position])
+            positions.add(Number(movie.position));
+            movieIds.add(Number(movie.tmdb_movie_id));
         }
-        res.status(200).json({
-            message: "favourite movies updated successfully",
 
-        })
+        // Fetch movie details before changing the database
+        const movieDetails = await Promise.all(
+            movies.map(async (movie) => ({
+                selection: movie,
+                details: await getMovieById(movie.tmdb_movie_id)
+            }))
+        );
+
+        // Start the database transaction
+        client = await pool.connect();
+        await client.query("BEGIN");
+
+        // Delete existing favourites
+        await client.query(
+            "DELETE FROM user_favourite_movies WHERE user_id = $1",
+            [userId]
+        );
+
+        // Save the new favourites
+        for (const { selection, details } of movieDetails) {
+            await client.query(
+                `INSERT INTO movies
+                (tmdb_movie_id, title, poster_path, release_date)
+                VALUES ($1, $2, $3, $4)
+                ON CONFLICT (tmdb_movie_id) DO NOTHING`,
+                [
+                    details.id,
+                    details.title,
+                    details.poster_path,
+                    details.release_date
+                ]
+            );
+
+            await client.query(
+                `INSERT INTO user_favourite_movies
+                (user_id, tmdb_movie_id, position)
+                VALUES ($1, $2, $3)`,
+                [
+                    userId,
+                    details.id,
+                    Number(selection.position)
+                ]
+            );
+        }
+
+        // Save all changes
+        await client.query("COMMIT");
+
+        return res.status(200).json({
+            message: "Favourite movies updated successfully."
+        });
 
     } catch (error) {
-        console.error(error)
-        res.status(500).json({
-            message: "failed to update favourite movies"
-        })
+        // Undo database changes if something fails
+        if (client) {
+            try {
+                await client.query("ROLLBACK");
+            } catch (rollbackError) {
+                console.error(
+                    "Favourite movies rollback failed:",
+                    rollbackError
+                );
+            }
+        }
+
+        console.error("Failed to update favourite movies:", error);
+
+        return res.status(500).json({
+            message: "Failed to update favourite movies. Please try again."
+        });
+
+    } finally {
+        // Return the connection to the pool
+        if (client) {
+            client.release();
+        }
     }
-})
+});
+
 export default router

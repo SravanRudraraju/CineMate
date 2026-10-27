@@ -49,11 +49,22 @@ router.delete("/:id", authMiddleware, async (req, res) => {
     try {
         const entryId = req.params.id
         const userId = req.userId
-        await pool.query(`DELETE FROM diary_entries WHERE id = $1 AND user_id = $2`, [entryId, userId])
+        const result = await pool.query(
+            `DELETE FROM diary_entries
+     WHERE id = $1 AND user_id = $2
+     RETURNING id`,
+            [entryId, userId]
+        );
 
-        res.status(200).json({
-            message: "entry deleted"
-        })
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                message: "Diary entry not found"
+            });
+        }
+
+        return res.status(200).json({
+            message: "Entry deleted successfully"
+        });
     } catch (error) {
         console.error(error)
         res.status(500).json({
