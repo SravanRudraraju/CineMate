@@ -22,6 +22,8 @@ const App = () => {
   const isLoggedIn = !!localStorage.getItem("token");
   const navigate = useNavigate()
 
+  const [diaryRefresh, setDiaryRefresh] = useState(0);
+
 
   const handleDiarySave = async (watchedDate, rating, liked, review) => {
     if (!isLoggedIn) {
@@ -55,6 +57,7 @@ const App = () => {
       );
 
       if (response.ok) {
+        setDiaryRefresh((prev) => prev + 1);
         setShowDiary(false);
         setSelectedMovie(null);
       } else {
@@ -80,7 +83,7 @@ const App = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/moviedetails/:id" element={<MovieDeatils />} />
         <Route path="/watchlist" element={<Watchlist />} />
-        <Route path="/diary" element={<Diary />} />
+        <Route path="/diary" element={<Diary refreshTrigger ={diaryRefresh}/>} />
         <Route path="/watched" element={<Watched />} />
         <Route path="/liked/movies" element={<LikedMovies />} />
         <Route path="/search" element={<Search />} />

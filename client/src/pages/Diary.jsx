@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { FaRegEdit, FaHeart, FaStar, FaRegStar, FaRegHeart } from "react-icons/fa";
 import DiaryEntry from "../components/DiaryEntry";
 
-const Diary = () => {
+const Diary = ({refreshTrigger}) => {
   const [diary, setDiary] = useState([])
 
   const [editingEntry, setEditingEntry] = useState(null);
@@ -31,7 +31,7 @@ const Diary = () => {
       }
     }
     fetchDiary()
-  }, [])
+  }, [refreshTrigger])
 
 
   const handleEditDiary = async (watchedDate, rating, liked, review) => {
