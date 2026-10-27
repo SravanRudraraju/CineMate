@@ -1,97 +1,49 @@
-import React, { useState, useEffect } from 'react'
-import MovieCard from "../components/MovieCard"
 
+import React, { useState, useEffect } from "react";
+import MovieCard from "../components/MovieCard";
 
 function Home() {
-    const [trendingMovies, setTrendingMovies] = useState([])
+  const [trendingMovies, setTrendingMovies] = useState([]);
 
-    useEffect(() => {
-        const fetchTrendingMovies = async () => {
-            const response = await fetch("http://localhost:3000/api/movies/trending")
-            const data = await response.json()
-            console.log("trending ", data)
-            setTrendingMovies(data.results)
-        }
-        fetchTrendingMovies()
-    }, [])
+  useEffect(() => {
+    const fetchTrendingMovies = async () => {
+      const response = await fetch(
+        "http://localhost:3000/api/movies/trending"
+      );
+      const data = await response.json();
+      console.log("trending ", data);
+      setTrendingMovies(data.results);
+    };
 
-    return (
-        <div className="relative min-h-screen overflow-hidden ">
- 
-            <div className="pointer-events-none absolute -top-60 left-1/2 h-[600px] w-[1000px] -translate-x-1/2 rounded-full bg-[#FF6B1A]/[0.05] blur-[160px]" />
+    fetchTrendingMovies();
+  }, []);
 
-            <main className="relative mx-auto w-[85%] max-w-[1500px] pt-32 pb-16">
+  return (
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Background glow */}
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-[#FF6B1A]/[0.05] blur-[120px] sm:-top-60 sm:h-[600px] sm:w-[800px] sm:blur-[160px] lg:w-[1000px]" />
 
-                {/* TRENDING */}
-                <section className="mb-28">
-                    <div className="mb-8 flex items-center gap-4">
-                        <div className="h-7 w-[3px] rounded-full bg-[#FF6B1A]"/>
-                        <h2 className="text-3xl font-semibold tracking-wide text-white">
-                            TRENDING NOW
-                        </h2>
-                    </div>
+      <main className="relative mx-auto w-[92%] max-w-[1500px] pb-12 pt-28 sm:w-[90%] sm:pb-16 sm:pt-32 lg:w-[85%]">
+        {/* TRENDING */}
+        <section className="mb-16 sm:mb-20 lg:mb-28">
+          <div className="mb-5 flex items-center gap-3 sm:mb-8 sm:gap-4">
+            <div className="h-6 w-[3px] shrink-0 rounded-full bg-[#FF6B1A] sm:h-7" />
 
-                    <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-                        {trendingMovies.slice(0, 6).map((movie) => (
-                            <MovieCard
-                                movie={movie}
-                                key={movie.id}
-                            />
-                        ))}
-                    </div>
-                </section>
+            <h2 className="text-xl font-semibold tracking-wide text-white sm:text-2xl lg:text-3xl">
+              TRENDING NOW
+            </h2>
+          </div>
 
-                {/* FOR YOU */}
-                <section className="mb-28">
-                    <div className="mb-8 flex items-center gap-4">
-                        <div className="h-7 w-[3px] rounded-full bg-[#FF6B1A]" />
-
-                        <h2 className="text-3xl font-semibold tracking-wide text-white">
-                            FOR YOU
-                        </h2>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-                        {trendingMovies.slice(0, 6).map((movie) => (
-                            <MovieCard
-                                movie={movie}
-                                key={movie.id}
-                            />
-                        ))}
-                    </div>
-
-                </section>
-
-
-                {/* FROM PEOPLE YOU FOLLOW */}
-                <section className="mb-28">
-
-                    <div className="flex items-center gap-4">
-                        <div className="h-7 w-[3px] rounded-full bg-[#FF6B1A]" />
-
-                        <h2 className="text-3xl font-semibold tracking-wide text-white">
-                            FROM PEOPLE YOU FOLLOW
-                        </h2>
-                    </div>
-
-                </section>
-
-
-                {/* COMMUNITY LISTS */}
-                <section>
-
-                    <div className="flex items-center gap-4">
-                        <div className="h-7 w-[3px] rounded-full bg-[#FF6B1A]" />
-
-                        <h2 className="text-3xl font-semibold tracking-wide text-white">
-                            COMMUNITY LISTS
-                        </h2>
-                    </div>
-
-                </section>
-
-            </main>
-        </div>
-    );
+          {/* Movie grid */}
+          <div className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-7 md:grid-cols-4 md:gap-5 lg:grid-cols-5 lg:gap-6 xl:grid-cols-6">
+            {trendingMovies.slice(0, 20).map((movie) => (
+              <MovieCard movie={movie} key={movie.id} />
+            ))}
+          </div>
+        </section>
+      </main>
+    </div>
+  );
 }
-export default Home
+
+export default Home;

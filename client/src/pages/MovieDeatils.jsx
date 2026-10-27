@@ -118,7 +118,7 @@ const MovieDeatils = () => {
   }, [Movie, isLoggedIn])
 
   if (!Movie) {
-    return <h1 className="text-white">Loading...</h1>;
+    return <h1 className="px-4 py-8 text-white">Loading...</h1>;
   }
 
   const trailer = Movie.videos.results.find(
@@ -178,20 +178,6 @@ const MovieDeatils = () => {
       })
     }
   }
-
-  const movie = {
-    title: "The Odyssey",
-    year: 2026,
-    runtime: 172,
-    genres: ["Adventure", "Action", "Fantasy"],
-    director: "Christopher Nolan",
-    description:
-      "Odysseus, the legendary King of Ithaca, embarks on a long and perilous journey home following the Trojan War. Throughout his voyage, he is forced to confront the whims of gods, mythological monsters, and trials that stretch both his cunning and his humanity to the breaking point.",
-    imdbUrl: "https://www.imdb.com/title/tt33764258/",
-    trailerUrl: "https://www.youtube.com/embed/f_bKjZeJBBI?si=Ppy8MhRhMg0zjfD3",
-    whereToWatch: ["Netflix", "Prime Video"]
-
-  };
 
   const handleWatchlist = async () => {
     if (!isLoggedIn) {
@@ -361,31 +347,31 @@ const MovieDeatils = () => {
       <div className='fixed inset-0 z-0 bg-gradient-to-r from-black/50 via-black/70 to-black/60' />
 
 
-      <main className=" relative z-10 px-12 py-8 text-white">
-        <div className="max-w-6xl mx-auto mt-4 flex items-center gap-18">
+      <main className="relative z-10 px-4 py-6 text-white sm:px-6 sm:py-8 lg:px-12">
+        <div className="mx-auto mt-4 flex max-w-6xl flex-col items-stretch gap-8 lg:flex-row lg:items-center lg:gap-10 xl:gap-18">
 
           {/* Poster */}
           <img
-            className="h-[400px] w-[267px] shrink-0 object-cover rounded-lg border border-white/20 shadow-2xl"
+            className="mx-auto h-auto max-h-[360px] w-[min(65vw,240px)] shrink-0 rounded-lg border border-white/20 object-cover shadow-2xl sm:w-[267px] lg:mx-0 lg:h-[400px]"
             src={`https://image.tmdb.org/t/p/w500${Movie.poster_path}`}
             alt={Movie.title}
           />
 
           {/* Movie Information */}
-          <div className="max-w-2xl">
+          <div className="min-w-0 w-full max-w-2xl">
 
             {/* Title */}
-            <h1 className="text-5xl uppercase font-bold tracking-tight">
+            <h1 className="break-words text-3xl font-bold uppercase tracking-tight sm:text-4xl lg:text-5xl">
               {Movie.title}
             </h1>
 
             {/* Metadata */}
-            <p className="mt-4 text-lg text-white/70">
+            <p className="mt-3 text-base text-white/70 sm:mt-4 sm:text-lg">
               {Movie.release_date.slice(0, 4)} <span className="mx-2">•</span> {Movie.runtime} mins
             </p>
 
             {/* Genres */}
-            <div className="flex gap-3 mt-6">
+            <div className="mt-5 flex flex-wrap gap-2 sm:mt-6 sm:gap-3">
               {Movie.genres.map((genre) => (
                 <span
                   key={genre.id}
@@ -397,7 +383,7 @@ const MovieDeatils = () => {
             </div>
 
             {/* Director */}
-            <p className="mt-7 text-lg text-white/70">
+            <p className="mt-5 text-base text-white/70 sm:mt-7 sm:text-lg">
               Directed by{" "}
               <span className="text-white font-medium">
                 {Movie.credits.crew.find((person) => person.job === "Director")?.name}
@@ -405,13 +391,13 @@ const MovieDeatils = () => {
             </p>
 
             {/* Description */}
-            <p className="mt-5 max-w-xl text-lg leading-7 text-white/80">
+            <p className="mt-4 max-w-xl break-words text-base leading-7 text-white/80 sm:mt-5 sm:text-lg">
               {Movie.overview}
             </p>
 
           </div>
           {/* imdb */}
-          <div className=' w-[350px] shrink-0'>
+          <div className='w-full min-w-0 shrink-0 lg:w-[300px] xl:w-[350px]'>
             <a href={`https://www.themoviedb.org/movie/${Movie.id}`} target="_blank" className='group flex items-center justify-between border-b border-white/20 pb-4'>
               <div>
                 <p className='text-xs uppercase tracking-[0.2em] text-white/50'>TMDB</p>
@@ -428,7 +414,7 @@ const MovieDeatils = () => {
                 TRAILER
               </p>
               <div className="overflow-hidden rounded-xl border border-white/15 shadow-xl">
-                <iframe className='w-full aspect-video rounded-lg' src={`https://www.youtube.com/embed/${trailerKey}`} title={`${movie.title}  trailer`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen />
+                <iframe className='w-full aspect-video rounded-lg' src={`https://www.youtube.com/embed/${trailerKey}`} title={`${Movie.title}  trailer`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen />
               </div>
 
             </div>
@@ -436,13 +422,7 @@ const MovieDeatils = () => {
             <div className='mt-7 border-t border-white/20 pt-5'>
               <p className='text-xs tracking-[0.2em] text-white/50'>WHERE TO WATCH</p>
               <div className='mt-3'>
-                {movie.whereToWatch.map((ott) => (
-                  <div key={ott} className='flex items-center justify-between py-3 border-b border-white/10 text-white/80 hover:text-white transition'>
-                    <span>{ott}</span>
-                    <span className='text-white/30'>→</span>
-
-                  </div>
-                ))}
+                <h2 className='text-lg text-white/70'>coming soon ...</h2>
               </div>
 
             </div>
@@ -451,15 +431,15 @@ const MovieDeatils = () => {
         </div>
 
         {/* action bar */}
-        <div className='w-[70%] m-auto mt-10 flex justify-between rounded-2xl border border-white/10 bg-black/30 backdrop-blur-md px-8 py-5'>
+        <div className='mx-auto mt-8 grid w-full grid-cols-3 gap-3 rounded-2xl border border-white/10 bg-black/30 px-3 py-4 backdrop-blur-md sm:mt-10 sm:gap-4 sm:px-5 sm:py-5 md:grid-cols-6 md:gap-2 md:px-4 lg:w-[90%] xl:w-[70%] xl:px-8'>
 
-          <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
+          <button className="group flex min-w-0 flex-col items-center justify-center gap-2 text-center text-white/60 transition duration-200 hover:text-white"
             onClick={handleWatchedMovies}>
             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'>  {watched ? <FaEye className='text-green-700' /> : <FaRegEye />} </span>
             <span className='text-base'>{watched ? "WATCHED" : "WATCH"}</span>
           </button>
 
-          <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
+          <button className="group flex min-w-0 flex-col items-center justify-center gap-2 text-center text-white/60 transition duration-200 hover:text-white"
             onClick={handleLikedMovies}>
             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'> {liked ? <FaHeart className='text-pink-800' /> : <FaRegHeart />}</span>
             <span className='text-base'>{liked ? "LIKED" : "LIKE"}</span>
@@ -467,7 +447,7 @@ const MovieDeatils = () => {
           </button>
 
           <div className="relative">
-            <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
+            <button className="group flex min-w-0 flex-col items-center justify-center gap-2 text-center text-white/60 transition duration-200 hover:text-white"
               onClick={() => {
                 if (!isLoggedIn) {
                   navigate("/login")
@@ -489,17 +469,17 @@ const MovieDeatils = () => {
               <div className="relative flex items-center gap-1 rounded-2xl border border-white/15 bg-gradient-to-br from-purple-950 via-slate-900 to-black px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.55)]">
 
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <div key={star} className="relative h-9 w-9">
+                  <div key={star} className="relative h-7 w-7 sm:h-9 sm:w-9">
 
-                    <FaRegStar className="absolute inset-0 h-9 w-9 text-white/40" />
+                    <FaRegStar className="absolute inset-0 h-7 w-7 text-white/40 sm:h-9 sm:w-9" />
 
                     {rating >= star && (
-                      <FaStar className="absolute inset-0 h-9 w-9 text-amber-400" />
+                      <FaStar className="absolute inset-0 h-7 w-7 text-amber-400 sm:h-9 sm:w-9" />
                     )}
 
                     {rating === star - 0.5 && (
                       <div className="absolute inset-0 w-1/2 overflow-hidden">
-                        <FaStar className="h-9 w-9 max-w-none text-amber-400" />
+                        <FaStar className="h-7 w-7 max-w-none text-amber-400 sm:h-9 sm:w-9" />
                       </div>
                     )}
 
@@ -539,7 +519,7 @@ const MovieDeatils = () => {
 
 
 
-          <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
+          <button className="group flex min-w-0 flex-col items-center justify-center gap-2 text-center text-white/60 transition duration-200 hover:text-white"
             onClick={() => {
               if (!isLoggedIn) {
                 navigate("/login")
@@ -552,7 +532,7 @@ const MovieDeatils = () => {
 
           </button>
 
-          <button className="group flex flex-col w-28 items-center gap-2 cursor-pointer text-white/60 transition duration-200 hover:text-white"
+          <button className="group flex min-w-0 flex-col items-center justify-center gap-2 text-center text-white/60 transition duration-200 hover:text-white"
             onClick={handleWatchlist}>
             <span className='text-4xl transition-transform duration-200 group-hover:scale-110'>{watchlisted ? <FaClock className='text-orange-400/80' /> : <FaRegClock />}</span>
             <span className='text-base'>{watchlisted ? "IN WATCHLIST" : "WATCHLIST"}</span>
@@ -564,50 +544,42 @@ const MovieDeatils = () => {
               return
             }
           }}>
-            <button className='w-28 flex flex-col items-center text-3xl transition-transform duration-200 group-hover:scale-110'><MdPlaylistAdd /></button>
-            <p className="text-md">ADD TO LISTS...</p>
+            <button className='flex w-full flex-col items-center text-3xl transition-transform duration-200 group-hover:scale-110'><MdPlaylistAdd /></button>
+            <p className="text-xs sm:text-sm">ADD TO LISTS...</p>
           </div>
         </div>
 
         {/* cast */}
-        <section className="max-w-7xl mx-auto mt-16">
-          <h2 className="text-2xl font-semibold mb-6">
+        <section className="mx-auto mt-10 max-w-7xl sm:mt-16">
+          <h2 className="mb-4 text-xl font-semibold sm:mb-6 sm:text-2xl">
             Cast
           </h2>
           <div className='relative'>
             <button onClick={() => scrollCast("left")}
-              className="absolute left-1 top-1/2 -translate-y-1/2 z-10
-             w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center
-             hover:bg-white/20 transition">
+              className="absolute left-1 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition hover:bg-white/20 sm:h-10 sm:w-10">
               <FaChevronLeft size={14} />
             </button>
             <div ref={castRef} className="flex gap-8 overflow-x-auto no-scrollbar px-12">
               {Movie.credits.cast.map((person) => (
-                <div key={person.id} className="w-36 shrink-0 text-center">
+                <div key={person.id} className="w-32 shrink-0 text-center sm:w-36">
                   <img
-                    className="w-32 h-32 object-cover mx-auto rounded-full border border-white/20 shadow-lg"
+                    className="mx-auto h-24 w-24 rounded-full border border-white/20 object-cover shadow-lg sm:h-32 sm:w-32"
                     src={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
                     alt={person.name}
                   />
 
-                  <h3 className="mt-4 text-lg font-medium">
+                  <h3 className="mt-3 text-base font-medium sm:mt-4 sm:text-lg">
                     {person.name}
                   </h3>
 
-                  <p className="mt-1 text-sm text-white/50">
+                  <p className="mt-1 text-xs text-white/50 sm:text-sm">
                     {person.character}
                   </p>
                 </div>
               ))}
             </div>
             <button onClick={() => scrollCast("right")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 z-10
-             w-10 h-10 rounded-full
-             bg-black/60 backdrop-blur-md
-             border border-white/20
-             text-white text-xl
-             flex items-center justify-center
-             hover:bg-black/80 transition">
+              className="absolute right-1 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/60 text-xl text-white backdrop-blur-md transition hover:bg-black/80 sm:h-10 sm:w-10">
               <FaChevronRight size={14} />
             </button>
           </div>
@@ -615,28 +587,26 @@ const MovieDeatils = () => {
         </section>
 
         {/* Crew */}
-        <section className="max-w-7xl mx-auto mt-16">
-          <h2 className="text-2xl font-semibold mb-6">
+        <section className="mx-auto mt-10 max-w-7xl sm:mt-16">
+          <h2 className="mb-4 text-xl font-semibold sm:mb-6 sm:text-2xl">
             Crew
           </h2>
           <div className='relative'>
             <button onClick={() => scrollCrew("left")}
-              className="absolute left-1 top-1/2 -translate-y-1/2 z-10
-             w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center
-             hover:bg-white/20 transition">
+              className="absolute left-1 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition hover:bg-white/20 sm:h-10 sm:w-10">
               <FaChevronLeft size={14} />
             </button>
 
             <div ref={crewRef} className="flex gap-8 overflow-x-auto no-scrollbar px-12">
               {importantCrew.map((person) => (
-                <div key={person.id} className="w-36 shrink-0 text-center">
+                <div key={person.id} className="w-32 shrink-0 text-center sm:w-36">
                   <img
-                    className="w-32 h-32 object-cover mx-auto rounded-full border border-white/20 shadow-lg"
+                    className="mx-auto h-24 w-24 rounded-full border border-white/20 object-cover shadow-lg sm:h-32 sm:w-32"
                     src={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
                     alt={person.name}
                   />
 
-                  <h3 className="mt-4 text-lg font-medium">
+                  <h3 className="mt-3 text-base font-medium sm:mt-4 sm:text-lg">
                     {person.name}
                   </h3>
 
@@ -651,9 +621,7 @@ const MovieDeatils = () => {
 
             </div>
             <button onClick={() => scrollCrew("right")}
-              className="absolute right-1 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md
-             border border-white/20 text-white flex items-center justify-center
-             hover:bg-white/20 transition">
+              className="absolute right-1 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition hover:bg-white/20 sm:h-10 sm:w-10">
               <FaChevronRight size={14} />
             </button>
           </div>

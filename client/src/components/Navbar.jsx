@@ -83,22 +83,22 @@ const Navbar = ({ onLogFilm }) => {
       } z-50 w-full bg-transparent pt-4`}
     >
       <div className="relative mx-auto w-[96%] max-w-[1700px]">
-        <div className="flex min-h-[86px] items-center gap-5">
-          {/* Logo */}
+        <div className="flex min-h-[86px] items-center gap-3 sm:gap-5">
+          {/* Logo: hidden on screens smaller than 640px */}
           <Link
             to="/"
             onClick={closeMenus}
-            className="shrink-0 no-underline transition hover:opacity-90"
+            className="hidden shrink-0 no-underline transition hover:opacity-90 sm:block"
           >
             <img
-              className="h-[68px] w-[230px] object-contain"
+              className="h-[60px] w-[200px] object-contain md:h-[68px] md:w-[230px]"
               src={logo}
               alt="CineMate"
             />
           </Link>
 
           {/* Desktop navigation */}
-          <div className="hidden min-w-0 flex-1 items-center gap-4 lg:flex">
+          <div className="hidden min-w-0 flex-1 items-center gap-2 xl:gap-4 lg:flex">
             {isLoggedIn && (
               <>
                 {/* My Movies */}
@@ -110,7 +110,7 @@ const Navbar = ({ onLogFilm }) => {
                       setProfileOpen(false);
                     }}
                     aria-expanded={moviesOpen}
-                    className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-[18px] font-bold tracking-wide transition duration-200 hover:bg-white/[0.06] hover:text-[#FF6B1A] ${
+                    className={`flex items-center gap-2 whitespace-nowrap rounded-full px-2 py-2 text-base font-bold tracking-wide transition duration-200 hover:bg-white/[0.06] hover:text-[#FF6B1A] xl:px-4 xl:text-[18px] ${
                       moviesOpen || inMyMovies
                         ? "bg-white/[0.06] text-[#FF6B1A]"
                         : "text-white/90"
@@ -162,7 +162,7 @@ const Navbar = ({ onLogFilm }) => {
                   )}
                 </div>
 
-                {/* Profile — same visual style as My Movies */}
+                {/* Profile */}
                 <div className="relative shrink-0">
                   <button
                     type="button"
@@ -172,7 +172,7 @@ const Navbar = ({ onLogFilm }) => {
                     }}
                     aria-label="Profile menu"
                     aria-expanded={profileOpen}
-                    className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-[18px] font-bold tracking-wide transition duration-200 hover:bg-white/[0.06] hover:text-[#FF6B1A] ${
+                    className={`flex items-center gap-2 whitespace-nowrap rounded-full px-2 py-2 text-base font-bold tracking-wide transition duration-200 hover:bg-white/[0.06] hover:text-[#FF6B1A] xl:px-4 xl:text-[18px] ${
                       profileOpen || location.pathname === "/profile"
                         ? "bg-white/[0.06] text-[#FF6B1A]"
                         : "text-white/90"
@@ -216,16 +216,16 @@ const Navbar = ({ onLogFilm }) => {
             )}
 
             {/* Search */}
-            <div className="w-48 min-w-0 flex-1 xl:max-w-[280px]">
+            <div className="w-36 min-w-0 flex-1 xl:w-48 xl:max-w-[280px]">
               {searchBar}
             </div>
 
-            {/* Log a Film — original styling preserved */}
+            {/* Log a Film */}
             {isLoggedIn && (
               <button
                 type="button"
                 onClick={onLogFilm}
-                className="group ml-auto mr-16 flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg border border-[#FF6B1A]/70 bg-gradient-to-br from-[#FF8A35] to-[#F04B16] px-4 py-2.5  text-base font-extrabold tracking-wide text-[#160B06] shadow-[0_3px_0_#9D310C] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_5px_0_#9D310C] active:translate-y-0.5 active:shadow-none"
+                className="group ml-auto mr-2 flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg border border-[#FF6B1A]/70 bg-gradient-to-br from-[#FF8A35] to-[#F04B16] px-3 py-2.5 text-sm font-extrabold tracking-wide text-[#160B06] shadow-[0_3px_0_#9D310C] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_5px_0_#9D310C] active:translate-y-0.5 active:shadow-none xl:mr-16 xl:px-4 xl:text-base"
               >
                 <Clapperboard
                   size={19}
@@ -254,20 +254,33 @@ const Navbar = ({ onLogFilm }) => {
             )}
           </div>
 
-          {/* Mobile menu toggle */}
-          <button
-            type="button"
-            aria-label="Toggle navigation menu"
-            aria-expanded={mobileOpen}
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className={`ml-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-2xl transition lg:hidden ${
-              mobileOpen
-                ? "bg-[#FF6B1A]/15 text-[#FF6B1A]"
-                : "bg-white/[0.08] text-white hover:bg-white/[0.14]"
-            }`}
-          >
-            {mobileOpen ? "×" : "☰"}
-          </button>
+          {/* Mobile actions: Log a Film + hamburger */}
+          <div className="ml-auto flex shrink-0 items-center gap-2 lg:hidden">
+            {isLoggedIn && (
+              <button
+                type="button"
+                onClick={onLogFilm}
+                className="flex items-center gap-1.5 rounded-lg bg-[#FF6B1A] px-3 py-2 text-sm font-bold text-black transition hover:bg-[#ff843d] sm:gap-2 sm:px-4 sm:text-base"
+              >
+                <Clapperboard size={17} />
+                <span>Log a Film</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              aria-label="Toggle navigation menu"
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-2xl transition ${
+                mobileOpen
+                  ? "bg-[#FF6B1A]/15 text-[#FF6B1A]"
+                  : "bg-white/[0.08] text-white hover:bg-white/[0.14]"
+              }`}
+            >
+              {mobileOpen ? "×" : "☰"}
+            </button>
+          </div>
         </div>
 
         {/* Mobile navigation */}
@@ -318,22 +331,6 @@ const Navbar = ({ onLogFilm }) => {
                 >
                   Profile
                 </Link>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    closeMenus();
-                    onLogFilm?.();
-                  }}
-                  className="group mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-[#FF6B1A]/70 bg-gradient-to-br from-[#FF8A35] to-[#F04B16] px-4 py-2.5 text-base font-extrabold tracking-wide text-[#160B06] shadow-[0_3px_0_#9D310C] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_5px_0_#9D310C] active:translate-y-0.5 active:shadow-none"
-                >
-                  <Clapperboard
-                    size={19}
-                    strokeWidth={2.5}
-                    className="transition-transform group-hover:-rotate-6"
-                  />
-                  LOG A FILM
-                </button>
 
                 <button
                   type="button"

@@ -216,12 +216,12 @@ const Profile = () => {
   return (
 
 
-    <div className="min-h-screen bg-[#151922] px-5 pb-20 pt-8 text-[#ece8df] sm:px-8">
-      <div className="mx-auto max-w-[1100px]">
+    <div className="min-h-screen overflow-x-hidden bg-[#151922] px-4 pb-16 pt-6 text-[#ece8df] sm:px-6 sm:pb-20 sm:pt-8 lg:px-8">
+      <div className="mx-auto w-full max-w-[1100px] min-w-0">
 
-        <header className="flex flex-col gap-7 border-b border-[#2b3140] pb-9 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex items-start gap-6">
-            <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-full bg-[#1d222d] ring-1 ring-[#353b4a] ring-offset-4 ring-offset-[#151922]">
+        <header className="flex flex-col gap-5 border-b border-[#2b3140] pb-7 sm:gap-7 sm:pb-9 md:flex-row md:items-start md:justify-between">
+          <div className="flex min-w-0 items-start gap-4 sm:gap-6">
+            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full bg-[#1d222d] ring-1 ring-[#353b4a] ring-offset-4 ring-offset-[#151922] sm:h-28 sm:w-28">
               {profile.profile_image && (
                 <img
                   src={profile.profile_image}
@@ -232,7 +232,7 @@ const Profile = () => {
             </div>
 
             <div className="min-w-0 pt-1">
-              <h1 className="font-display text-4xl font-semibold tracking-tight text-white">
+              <h1 className="break-words font-display text-2xl font-semibold tracking-tight text-white sm:text-4xl">
                 {profile.name}
               </h1>
 
@@ -247,7 +247,7 @@ const Profile = () => {
               )}
 
               {profile.bio && (
-                <p className="mt-4 max-w-xl text-[15px] leading-7 text-[#ece8df]/85">
+                <p className="mt-3 max-w-xl break-words text-sm leading-6 text-[#ece8df]/85 sm:mt-4 sm:text-[15px] sm:leading-7">
                   {profile.bio}
                 </p>
               )}
@@ -257,22 +257,22 @@ const Profile = () => {
           </div>
 
           <button onClick={handleEditProfile}
-            className="self-start rounded-full border border-[#363c4b] px-5 py-2 text-sm font-medium text-[#ece8df]/85 transition duration-200 hover:border-[#e9b44c] hover:bg-[#e9b44c]/5 hover:text-[#e9b44c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e9b44c]"
+            className="self-start rounded-full border border-[#363c4b] px-4 py-2 text-sm font-medium text-[#ece8df]/85 transition duration-200 hover:border-[#e9b44c] hover:bg-[#e9b44c]/5 hover:text-[#e9b44c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e9b44c] sm:px-5"
           >
             Edit profile
           </button>
         </header>
 
-        <section className="mt-11">
-          <div className="mb-5 flex items-center gap-3">
+        <section className="mt-8 sm:mt-11">
+          <div className="mb-4 flex items-center gap-3 sm:mb-5">
             <span className="h-5 w-1 rounded-full bg-[#e9b44c]" />
 
-            <h2 className="font-display text-2xl font-medium text-white">
+            <h2 className="font-display text-xl font-medium text-white sm:text-2xl">
               Favourite films
             </h2>
           </div>
 
-          <div className="flex flex-wrap gap-4 sm:gap-6">
+          <div className="flex flex-wrap gap-3 sm:gap-6">
             {favourites.map((movie) => (
               <MovieCard
                 key={movie.tmdb_movie_id}
@@ -282,28 +282,28 @@ const Profile = () => {
                   poster_path: movie.poster_path,
                   release_date: movie.release_date,
                 }}
-                className="w-[110px] sm:w-[160px]"
+                className="w-[105px] xs:w-[120px] sm:w-[160px]"
                 showMeta={false}
               />
             ))}
           </div>
         </section>
 
-        <section className="mt-14">
-          <div className="mb-5 flex items-center justify-between border-b border-[#2b3140] pb-3">
-            <h2 className="font-display text-xl font-medium text-white">
+        <section className="mt-10 sm:mt-14">
+          <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#2b3140] pb-3">
+            <h2 className="font-display text-lg font-medium text-white sm:text-xl">
               Recently watched
             </h2>
 
             <button
               onClick={() => navigate("/diary")}
-              className="text-sm font-medium text-[#a2a7b4] transition duration-200 hover:text-[#e9b44c]"
+              className="shrink-0 text-xs font-medium text-[#a2a7b4] transition duration-200 hover:text-[#e9b44c] sm:text-sm"
             >
               Open diary →
             </button>
           </div>
 
-          <div className="grid grid-cols-3 gap-x-3 gap-y-7 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
+          <div className="grid grid-cols-3 gap-x-2 gap-y-5 min-[420px]:grid-cols-4 sm:gap-x-3 sm:gap-y-7 md:grid-cols-6 lg:grid-cols-8">
             {recentMovies.map((movie) => (
               <MovieCard
                 key={movie.tmdb_movie_id}
@@ -318,17 +318,17 @@ const Profile = () => {
 
 
       {showEditProfile && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-[#0b0e14]/85 p-3 backdrop-blur-md sm:p-6 lg:p-8">
-          <div className="mx-auto flex min-h-full w-full max-w-5xl items-center justify-center">
-            <div className="w-full overflow-hidden rounded-2xl border border-[#3a4151] bg-[#151922] shadow-[0_30px_100px_rgba(0,0,0,0.6)]">
+        <div className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-[#0b0e14]/85 p-2 backdrop-blur-md sm:p-4 md:p-6 lg:p-8">
+          <div className="mx-auto flex min-h-full w-full max-w-5xl items-start justify-center py-2 sm:items-center sm:py-0">
+            <div className="w-full min-w-0 overflow-hidden rounded-xl border border-[#3a4151] bg-[#151922] shadow-[0_30px_100px_rgba(0,0,0,0.6)] sm:rounded-2xl">
 
               {/* Header */}
-              <div className="flex items-center justify-between border-b border-[#343a49] px-5 py-5 sm:px-8 sm:py-6">
+              <div className="flex items-center justify-between gap-3 border-b border-[#343a49] px-4 py-4 sm:px-8 sm:py-6">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#e9b44c]">
                     CineMate
                   </p>
-                  <h2 className="mt-1 font-display text-2xl font-semibold text-white sm:text-3xl">
+                  <h2 className="mt-1 font-display text-xl font-semibold text-white sm:text-3xl">
                     Edit profile
                   </h2>
                 </div>
@@ -344,7 +344,7 @@ const Profile = () => {
               </div>
 
               {/* Form content */}
-              <div className="space-y-9 p-5 sm:p-8">
+              <div className="space-y-7 p-4 sm:space-y-9 sm:p-8">
 
                 {/* Profile picture */}
                 <section>
@@ -352,7 +352,7 @@ const Profile = () => {
                     Profile picture
                   </label>
 
-                  <div className="flex flex-col gap-5 rounded-xl border border-[#343a49] bg-[#1b202b] p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-6">
+                  <div className="flex flex-col gap-4 rounded-xl border border-[#343a49] bg-[#1b202b] p-4 sm:flex-row sm:items-center sm:gap-6 sm:p-6">
                     <label className="group relative flex h-28 w-28 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-[#454c5d] bg-[#252b38] transition hover:border-[#e9b44c]">
                       {selectedImage ? (
                         <img
@@ -439,7 +439,7 @@ const Profile = () => {
                 <section>
 
 
-                  <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="grid min-w-0 gap-4 sm:gap-5 sm:grid-cols-2">
                     <div>
                       <label className="mb-2 block text-lg font-semibold text-[#ece8df]">
                         Name
@@ -489,7 +489,7 @@ const Profile = () => {
                     </h3>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-5">
                     {favouriteMovies.map((movie, index) => (
                       <button
                         key={index}
@@ -550,7 +550,7 @@ const Profile = () => {
                   </div>
 
                   {activeFavouriteSlot !== null && (
-                    <div className="mt-5 rounded-xl border border-[#343a49] bg-[#1b202b] p-4 sm:p-5">
+                    <div className="mt-5 min-w-0 rounded-xl border border-[#343a49] bg-[#1b202b] p-3 sm:p-5">
                       <div className="mb-4 flex items-center justify-between">
                         <h4 className="text-sm font-semibold text-white">
                           Select a film to change
@@ -572,11 +572,11 @@ const Profile = () => {
               </div>
 
               {/* Footer */}
-              <div className="flex items-center justify-end gap-3 border-t border-[#343a49] bg-[#1b202b] px-5 py-5 sm:px-8">
+              <div className="flex flex-wrap items-center justify-end gap-2 border-t border-[#343a49] bg-[#1b202b] px-4 py-4 sm:flex-nowrap sm:gap-3 sm:px-8 sm:py-5">
                 <button
                   type="button"
                   onClick={() => setShowEditProfile(false)}
-                  className="rounded-full px-5 py-3 text-sm font-semibold text-[#d1d5df] transition hover:bg-white/5 hover:text-white"
+                  className="rounded-full px-4 py-3 text-sm font-semibold text-[#d1d5df] transition hover:bg-white/5 hover:text-white sm:px-5"
                 >
                   Cancel
                 </button>
@@ -584,7 +584,7 @@ const Profile = () => {
                 <button
                   type="button"
                   onClick={handleSaveProfile}
-                  className="rounded-full bg-[#e9b44c] px-7 py-3 text-sm font-bold text-[#151922] shadow-md shadow-[#e9b44c]/10 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f5c96b] hover:shadow-lg hover:shadow-[#e9b44c]/20 active:translate-y-0 active:scale-[0.97] active:bg-[#d9a53c] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e9b44c] disabled:pointer-events-none disabled:opacity-50"
+                  className="rounded-full bg-[#e9b44c] px-5 py-3 text-sm font-bold text-[#151922] shadow-md shadow-[#e9b44c]/10 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#f5c96b] hover:shadow-lg hover:shadow-[#e9b44c]/20 active:translate-y-0 active:scale-[0.97] active:bg-[#d9a53c] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e9b44c] disabled:pointer-events-none disabled:opacity-50 sm:px-7"
                 >
                   Save changes
                 </button>

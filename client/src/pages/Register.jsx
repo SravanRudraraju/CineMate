@@ -45,23 +45,23 @@ const Register = () => {
     }
   }
   return (
-    <div className="min-h-screen bg-[#08090D] text-white">
+    <div className="min-h-screen overflow-x-hidden bg-[#08090D] text-white">
 
-      <main className="flex min-h-screen items-center justify-center px-6 pt-28 pb-16">
+      <main className="flex min-h-screen items-center justify-center px-4 py-10 sm:px-6 sm:py-16">
 
         <div className="relative w-full max-w-[430px]">
 
           {/* Small corner detail */}
           <div className="absolute -left-px -top-px h-10 w-10 border-l-2 border-t-2 border-orange-500" />
 
-          <div className="border border-white/10 bg-[#0B0C10] px-8 py-10 sm:px-10">
+          <div className="border border-white/10 bg-[#0B0C10] px-5 py-7 sm:px-8 sm:py-9 md:px-10 md:py-10">
 
 
-            <div className="mb-9">
-              <h1 className="text-3xl font-semibold tracking-tight"> CREATE ACCOUNT </h1>
+            <div className="mb-7 sm:mb-9">
+              <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl"> CREATE ACCOUNT </h1>
             </div>
 
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            <form className="space-y-5 sm:space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="email" className="mb-2 block text-xs font-medium text-white/50">
                   Email
@@ -131,14 +131,14 @@ const Register = () => {
             </form>
 
             {/* Login */}
-            <div className="mt-7 text-center text-sm">
+            <div className="mt-6 text-center text-sm sm:mt-7">
               <span className="text-white/30">
                 Already have an account?
               </span>
 
               <Link
                 to="/login"
-                className="ml-2 text-orange-400 transition hover:text-orange-300"
+                className="ml-1 inline-block text-orange-400 transition hover:text-orange-300 sm:ml-2"
               >
                 Login
               </Link>
