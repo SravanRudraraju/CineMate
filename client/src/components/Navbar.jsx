@@ -83,15 +83,16 @@ const Navbar = ({ onLogFilm }) => {
       } z-50 w-full bg-transparent pt-4`}
     >
       <div className="relative mx-auto w-[96%] max-w-[1700px]">
-        <div className="flex min-h-[86px] items-center gap-3 sm:gap-5">
-          {/* Logo: hidden on screens smaller than 640px */}
+        <div className="flex min-h-[64px] items-center gap-2 sm:min-h-[86px] sm:gap-5">
+          {/* Logo: always visible and links back to the home page */}
           <Link
             to="/"
             onClick={closeMenus}
-            className="hidden shrink-0 no-underline transition hover:opacity-90 sm:block"
+            aria-label="CineMate home"
+            className="shrink-0 no-underline transition hover:opacity-90"
           >
             <img
-              className="h-[60px] w-[200px] object-contain md:h-[68px] md:w-[230px]"
+              className="h-10 w-[120px] object-contain sm:h-[52px] sm:w-[160px] md:h-[68px] md:w-[230px]"
               src={logo}
               alt="CineMate"
             />
@@ -255,7 +256,7 @@ const Navbar = ({ onLogFilm }) => {
           </div>
 
           {/* Mobile actions: Log a Film + hamburger */}
-          <div className="ml-auto flex shrink-0 items-center gap-2 lg:hidden">
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 lg:hidden sm:gap-2">
             {isLoggedIn && (
               <button
                 type="button"
